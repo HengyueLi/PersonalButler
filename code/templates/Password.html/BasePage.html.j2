@@ -1,0 +1,63 @@
+{% extends "navbar.html.j2" %}
+
+
+
+
+
+{% block head %}
+<style>
+.fixed-box {
+  min-height: 600px;
+  max-height: 600px;
+  min-width: 150px;
+  overflow-y: scroll;
+  border:groove;
+}
+
+.fixed-actionbox{
+  min-height: 600px;
+  max-height: 600px;
+}
+</style>
+{% endblock %}
+
+
+
+
+
+{% block main %}
+<div class="jumbotron">
+  <div class="container">
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+      {% block actionbar %}
+      {% endblock %}
+    </div>
+  </div>
+</div>
+
+
+<div class='container'>
+    <div class='row'>
+        <div class="list-group fixed-box col2">
+            <center style="background-color: grey;">
+              <strong >Class</strong>
+            </center>
+            {% block classlist %}
+            {% endblock %}
+        </div>
+        <div class="list-group fixed-box col2">
+            <center style="background-color: grey;">
+              <strong>Item</strong>
+            </center>
+            {% block itemlist %}
+            {% endblock %}
+        </div>
+        <div class='col8 fixed-actionbox'>
+            {% block edititerm %}
+            {% endblock %}
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

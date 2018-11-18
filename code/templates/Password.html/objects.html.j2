@@ -1,0 +1,147 @@
+
+
+
+
+
+{% macro SearchPasswordIterm() %}
+<div class="input-group">
+  <form class="form-inline my-2 my-lg-0">
+    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+  </form>
+</div>
+{%- endmacro %}
+
+
+
+{% macro AddPasswordClass(classform) %}
+<div class="btn-group mr-2" role="group" aria-label="First group" >
+  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#password_add_class" >
+    New class
+  </button>
+</div>
+
+
+
+
+<div class="modal fade" id="password_add_class" tabindex="-1" role="dialog" aria-labelledby="password_add_classLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <form method='post' action = "{{url_for('PasswordAddClass')}}">
+      {{ classform.hidden_tag() }}
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">New class name:</label>
+            <!-- <input type="text" class="form-control" id="recipient-name"> -->
+            {{ classform.Class(class="form-control") }}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">add</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{%- endmacro %}
+
+
+
+
+
+{% macro AddPasswordIterm(Class,itemform) %}
+<div class="btn-group mr-2" role="group" aria-label="First group" >
+  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#password_add_class_item" >
+    New iterm
+  </button>
+</div>
+
+
+<div class="modal fade" id="password_add_class_item" tabindex="-1" role="dialog" aria-labelledby="password_add_class_itemLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <form method='post' action="{{url_for('PasswordAddItem',Class=Class)}}" >
+      {{itemform.hidden_tag()}}
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">New class name:</label>
+            <!-- <input type="text" class="form-control" id="recipient-name"> -->
+            {{itemform.item(class="form-control")}}
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">add</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{%- endmacro %}
+
+
+
+
+
+
+<div class="jumbotron">
+  <div class="container">
+
+
+
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+      <div class="btn-group mr-2" role="group" aria-label="First group" >
+        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#password_add_class" >
+          New class
+        </button>
+      </div>
+
+
+      <!-- add class  -->
+
+      <div class="modal fade" id="password_add_class" tabindex="-1" role="dialog" aria-labelledby="password_add_classLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <form>
+            <div class="modal-content">
+              <div class="modal-body">
+                <div class="form-group">
+                  <label for="recipient-name" class="col-form-label">New class name:</label>
+                  <input type="text" class="form-control" id="recipient-name">
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary">add</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+      <div class="btn-group mr-2" role="group" aria-label="First group">
+        <button type="button" class="btn btn-secondary">New iterm</button>
+      </div>
+
+      <div class="input-group">
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+
+
+
+    </div>
+
+
+  </div>
+</div>
