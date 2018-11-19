@@ -1,15 +1,17 @@
 {% extends "navbar.html.j2" %}
 
 
+{% set Classstyleclass = "list-group-item list-group-item-action " %}
+{% set itermstyleclass = "list-group-item list-group-item-action list-group-item-info " %}
 
 
 
 {% block head %}
 <style>
 .fixed-box {
-  min-height: 600px;
-  max-height: 600px;
-  min-width: 150px;
+  min-height: 300px;
+  max-height: 300px;
+  min-width:  300px;
   overflow-y: scroll;
   border:groove;
 }
@@ -20,6 +22,7 @@
 }
 </style>
 {% endblock %}
+
 
 
 
@@ -36,28 +39,43 @@
 </div>
 
 
-<div class='container'>
+<div class='container '>
     <div class='row'>
-        <div class="list-group fixed-box col2">
+
+        <div class="list-group fixed-box col6">
             <center style="background-color: grey;">
               <strong >Class</strong>
             </center>
             {% block classlist %}
             {% endblock %}
         </div>
-        <div class="list-group fixed-box col2">
+
+        <div class="list-group fixed-box col6">
             <center style="background-color: grey;">
               <strong>Item</strong>
             </center>
             {% block itemlist %}
             {% endblock %}
         </div>
-        <div class='col8 fixed-actionbox'>
-            {% block edititerm %}
-            {% endblock %}
-        </div>
 
     </div>
+
+
+    <!-- </div> -->
 </div>
+
+
+<div class='container'>
+    {% block edititerm %}
+    {% endblock %}
+</div>
+
+
+
+
+
+
+{% block scripts %}
+{% endblock %}
 
 {% endblock %}

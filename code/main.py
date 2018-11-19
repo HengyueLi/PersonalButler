@@ -23,10 +23,20 @@ app.config['SECRET_KEY'] = os.urandom(24)
 
 app.config['PROFILE_DATA_FILE'] = datafile
 app.config['DATA_CONTAINER'] = {}
+#-------------------------------------------------------------------------------------------
+#      time js
+from flask_moment import Moment
+moment = Moment(app)
+
+
+
+
 
 
 
 from permission import permission
+from FUM        import FUM
+app.config['fun_FUM'] = FUM
 #-------------------------------------------------------------------------------------------
 #  render all the pages
 from Pages import *

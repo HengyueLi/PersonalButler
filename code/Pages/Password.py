@@ -5,7 +5,7 @@ import flask
 
 
 from flask_wtf import FlaskForm
-from wtforms import StringField
+from wtforms import StringField,FloatField
 
 
 class AddClassForm(FlaskForm):
@@ -14,6 +14,13 @@ class AddClassForm(FlaskForm):
 
 class AddItemForm(FlaskForm):
     item = StringField('item')
+    time = FloatField('time')
+
+class AddKeyValPair(FlaskForm):
+    key = StringField('key')
+    val = StringField('val')
+
+
 
 
 
@@ -46,11 +53,13 @@ def PasswordClass(Class):
 def PasswordItem(Class,item):
     classform = AddClassForm()
     itemform  = AddItemForm()
+    kvform    = AddKeyValPair()
 
     return flask.render_template('Password.html/PasswordItem.html.j2',
     app = app,
     classform = classform,
-    itemform  = itemform ,)
+    itemform  = itemform ,
+    kvform    = kvform   ,)
 
 
 
@@ -97,14 +106,30 @@ def PasswordAddClass():
 def PasswordAddItem(Class):
     form = AddItemForm()
     if form.validate_on_submit():
-        newitem = form.item.data
+        newitem    = form.item.data
+        createtime = form.time.data
         container = app.config['DATA_CONTAINER']
         pcls = container.GetTable('PasswordManager')['class'][Class]
         if newitem in pcls:
             flask.flash("iterm name '{}' exists!".format(newitem))
             return flask.redirect(  flask.session.get('SavingUrl','/')   )
         pcls[newitem] = {}
+        pcls[newitem]['createtime'] = createtime
         container.Save()
         return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = newitem )  )
     flask.flash("error! not valid submit in PasswordAddItem")
+    return flask.redirect(  flask.session.get('SavingUrl','/')   )
+
+
+
+
+@app.route('/PasswordAddKeyvalPair/<string:Class>/<string:item>',methods=['post'])
+@permission.ValidForLogged
+def PasswordAddKeyvalPair(Class,item):
+    form = AddKeyValPair()
+    if form.validate_on_submit():
+        key = form.key.data
+        val = form.val.data
+
+    flask.flash("error! not valid submit in PasswordAddKeyvalPair")
     return flask.redirect(  flask.session.get('SavingUrl','/')   )

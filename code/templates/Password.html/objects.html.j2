@@ -68,14 +68,26 @@
             <!-- <input type="text" class="form-control" id="recipient-name"> -->
             {{itemform.item(class="form-control")}}
           </div>
+          <div style="display:none"> {{itemform.time(id="password_add_class_item_gettime")}} </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">add</button>
+          <button onclick="return submitpassword_add_class_item()" type="submit" class="btn btn-primary">add</button>
         </div>
       </div>
     </form>
   </div>
 </div>
+
+<script>
+function submitpassword_add_class_item() {
+  var nowsec = getsecnow();
+  // alert(nowsec)
+  document.getElementById('password_add_class_item_gettime').value = nowsec;
+  return true;
+}
+</script>
+
+
 {%- endmacro %}
 
 

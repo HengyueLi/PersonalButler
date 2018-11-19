@@ -1,0 +1,80 @@
+
+
+{#
+will return a function RefreshTime{{uid}}()  to renew time form
+                       getInputTimeSecs{{uid}} return the seconds of the input
+ #}
+
+{% macro DateTimebock(uid,IsShowTime = False ) %}
+
+
+{% if IsShowTime %}
+  {% set display = "" %}
+{% else %}
+  {% set display = "display:none" %}
+{% endif %}
+
+
+{% macro Input(id,tag) %}
+<div class="col-md-4">
+  <label class="sr-only" for="inlineFormInputGroup">{{tag}}</label>
+  <div class="input-group mb-2">
+    <div class="input-group-prepend">
+      <div class="input-group-text">{{tag}}</div>
+    </div>
+    <input type="text" class="form-control" id="{{id}}" placeholder="{{tag}}">
+  </div>
+</div>
+{%- endmacro %}
+
+
+
+
+<form>
+  <div class="form-row align-items-center">
+
+    {{Input(id="TimeYear" +uid,tag='Year' )}}
+    {{Input(id="TimeMonth"+uid,tag='Mon.')}}
+    {{Input(id="TimeDate" +uid,tag='Date' )}}
+ </div>
+
+   <!-- hour min seconds -->
+  <div class="form-row align-items-center" style="{{display}}">
+    {{Input(id="TimeHour"   +uid,tag='Hour'       )}}
+    {{Input(id="TimeMinutes"+uid,tag='Min.'    )}}
+    {{Input(id="TimeSeconds"+uid,tag='Sec.'    )}}
+  </div>
+
+</form>
+
+
+
+<script>
+function RefreshTime{{uid}} () {
+  var nowsec = getsecnow()              ;
+  var now    = getDateobjBysecs(nowsec) ;
+  document.getElementById('TimeYear{{uid}}' ).value   = now.getFullYear();
+  document.getElementById('TimeMonth{{uid}}').value   = now.getMonth()+1 ;
+  document.getElementById('TimeDate{{uid}}' ).value   = now.getDate()    ;
+  document.getElementById('TimeHour{{uid}}' ).value   = now.getHours()   ;
+  document.getElementById('TimeMinutes{{uid}}').value = now.getMinutes() ;
+  document.getElementById('TimeSeconds{{uid}}').value = now.getSeconds() ;
+}
+
+
+function getInputTimeSecs{{uid}}() {
+  var Year = document.getElementById('TimeYear{{uid}}' ).value;
+  var Mont = document.getElementById('TimeMonth{{uid}}').value;
+  var date = document.getElementById('TimeDate{{uid}}' ).value;
+  var Hour = document.getElementById('TimeHour{{uid}}' ).value;
+  var Minu = document.getElementById('TimeMinutes{{uid}}').value;
+  var secs = document.getElementById('TimeSeconds{{uid}}').value;
+  var tobj = getDateByLocaltime(Year,Mont,date,Hour,Minu,secs)
+  var secs = getSecsByDateobj(tobj)                                 
+  return secs
+}
+
+</script>
+
+
+{%- endmacro %}

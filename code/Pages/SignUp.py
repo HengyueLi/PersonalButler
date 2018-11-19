@@ -21,10 +21,16 @@ def CreateNewData(app,password):
     container = PyDictFileEncy(file,password)
     app.config['DATA_CONTAINER'] = container
     container.connect()
-    #-------------------------------------------------------
+    #=======================================================
+    #    PasswordManager
     container.CreateTableIfNotExist('PasswordManager')
     g = container.GetTable('PasswordManager')
+    #---------------------------
+    #   set items into classes
     g['class'] = {}
+    #---------------------------
+    #   remember popular keywords    :   key:number  
+    g['keywords'] = {}
     #-------------------------------------------------------
     container.CreateTableIfNotExist('Relations')
     container.CreateTableIfNotExist('Diary')

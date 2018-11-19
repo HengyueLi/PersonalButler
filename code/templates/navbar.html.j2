@@ -26,6 +26,29 @@
     <!-- Bootstrap core CSS -->
     <link href="{{url_for('static',filename='bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
 
+
+
+
+    <link href="{{url_for('static',filename='others/docsearch.min.css')}}" rel="stylesheet">
+
+    <link href="{{url_for('static',filename='others/docs.min.css')}}" rel="stylesheet">
+
+
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{{url_for('static',filename='bootstrap/js/jquery-3.3.1.slim.min.js')}}"></script>
+    <!-- <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script> -->
+    <script src="{{url_for('static',filename='bootstrap/js/popper.min.js')}}"></script>
+    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
+
+    <!-- js __  moment -->
+    {{ moment.include_moment() }}
+    {#{ moment.lang(lang_) }#}
+    <!-- end js moment -->
+
     <!-- Custom styles for this template -->
     <style>
           /* Move down content because we have a fixed navbar that is 3.5rem tall */
@@ -117,13 +140,6 @@
       <!-- <p>&copy; Company 2017-2018</p> -->
     </footer>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="{{url_for('static',filename='bootstrap/js/jquery-3.3.1.slim.min.js')}}"></script>
-    <!-- <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script> -->
-    <script src="{{url_for('static',filename='bootstrap/js/popper.min.js')}}"></script>
-    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
 
 
 
@@ -131,8 +147,36 @@
    <script>
    function activate_navbar(id) {
 
-
    }
+
+
+   function getsecnow() {
+     var d = new Date();
+     var n = d.getTime();
+     return n/1000
+   }
+
+   function getDateobjBysecs(secs) {
+     var t = new Date(); // Epoch
+     t.setTime(secs * 1000);
+     return t
+   }
+
+   function getSecsByDateobj(date) {
+     return date.getTime()/1000
+   }
+
+   function getDateByLocaltime(Y,M,D,h,m,s){
+     var d = new Date(Y,M,D,h,m,s);
+     // d.setTime( d.getTime()  );
+     return d
+   }
+
+
+
+
+
+
    </script>
 
 
