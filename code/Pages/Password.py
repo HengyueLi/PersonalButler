@@ -17,8 +17,72 @@ class AddItemForm(FlaskForm):
     time = FloatField('time')
 
 class AddKeyValPair(FlaskForm):
-    key = StringField('key')
-    val = StringField('val')
+    key  = StringField('key')
+    val  = StringField('val')
+    time = FloatField('time')
+
+
+
+
+
+#---------------------------------------
+# ObjItem(Class,Item)
+class ObjItem():
+
+    @classmethod
+    def InserNew(cls,Class,Item,Timesec):
+        container = app.config['DATA_CONTAINER']
+        pclass    = container.GetTable('PasswordManager')['class'].get(Class,None)
+        if pclass is None:
+            return [ False , 'Class name {} does not exist!'.format(Class)  ]
+        if Item  in pclass:
+            return [ False , 'Item name {} exist! Use a different name'.format(Item)  ]
+        pclass[Item] = {
+        'createtime': Timesec ,
+        'actions'   : [ ]     ,
+        'data'      : {}      ,
+        }
+        return [True,   cls(Class = Class,Item = Item)   ]
+
+
+
+
+    def __init__(self,Class,Item):
+        self.container = app.config['DATA_CONTAINER']
+        self.item = self.container.GetTable('PasswordManager')['class'][Class].get(Item,None)
+        if self.item is None:
+            self.IsInitiated = False
+        self.data = self.item['data']
+        self.IsInitiated = True
+
+
+    def Save(self):
+        self.container.Save()
+
+    def RecordAction(self,actype,actime,actkey,actval):
+        # actype = [ 'create' , 'change' ]
+        al = self.item['actions']
+        al.append({
+            'actype':actype,
+            'actime':actime,
+            'actkey':actkey,
+            'actval':actval,
+        })
+
+    # return [TF,reminder]
+    def InserKeyvalPair(self,key,val,time):
+        if key in self.item['data']:
+            return [False,'key {} exists in iterm!'.format(key)]
+        self.item['data'][key] = val
+        self.RecordAction(actype='create',actime=time,actkey=key,actval=val)
+        return [True,0]
+
+
+
+
+
+
+
 
 
 
@@ -54,9 +118,11 @@ def PasswordItem(Class,item):
     classform = AddClassForm()
     itemform  = AddItemForm()
     kvform    = AddKeyValPair()
+    objitem   = ObjItem( Class=Class , Item=item )
 
     return flask.render_template('Password.html/PasswordItem.html.j2',
     app = app,
+    objitem = objitem,
     classform = classform,
     itemform  = itemform ,
     kvform    = kvform   ,)
@@ -108,15 +174,14 @@ def PasswordAddItem(Class):
     if form.validate_on_submit():
         newitem    = form.item.data
         createtime = form.time.data
-        container = app.config['DATA_CONTAINER']
-        pcls = container.GetTable('PasswordManager')['class'][Class]
-        if newitem in pcls:
-            flask.flash("iterm name '{}' exists!".format(newitem))
+        r = ObjItem.InserNew(Class = Class,Item = newitem,Timesec = createtime)
+        if r[0] :
+            item = r[1]
+            item.Save()
+            return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = newitem )  )
+        else:
+            flask.flash(r[1])
             return flask.redirect(  flask.session.get('SavingUrl','/')   )
-        pcls[newitem] = {}
-        pcls[newitem]['createtime'] = createtime
-        container.Save()
-        return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = newitem )  )
     flask.flash("error! not valid submit in PasswordAddItem")
     return flask.redirect(  flask.session.get('SavingUrl','/')   )
 
@@ -128,8 +193,23 @@ def PasswordAddItem(Class):
 def PasswordAddKeyvalPair(Class,item):
     form = AddKeyValPair()
     if form.validate_on_submit():
-        key = form.key.data
-        val = form.val.data
-
+        key  = form.key .data
+        val  = form.val .data
+        time = form.time.data
+        obj  = ObjItem(Class=Class,Item=item)
+        r = obj.InserKeyvalPair(key=key,val=val,time=time)
+        if r[0]:
+            obj.Save()
+            #---count key frequency
+            container = app.config['DATA_CONTAINER']
+            kwcounter = container.GetTable('PasswordManager')['keywords']
+            if key in kwcounter:
+                kwcounter[key] += 1
+            else:
+                kwcounter[key]  = 1
+            return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
+        else:
+            flask.flash(r[1])
+            return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
     flask.flash("error! not valid submit in PasswordAddKeyvalPair")
-    return flask.redirect(  flask.session.get('SavingUrl','/')   )
+    return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
