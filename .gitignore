@@ -8,3 +8,5 @@ code/Pages/__pycache__/
 code/server/__pycache__/
 
 ENV_mac/
+
+code/static/bootstrap/css/\.DS_Store

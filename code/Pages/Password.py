@@ -78,6 +78,26 @@ class ObjItem():
         return [True,0]
 
 
+    # def GetKeyValCounter(self):
+    #     kwcounter = self.container.GetTable('PasswordManager')['keywords']
+    #     return kwcounter
+
+
+    # return List1,List2,   List2 contains the less porpular keys
+    def GetPopularKeyList(self):
+        #   length of List1
+        LenL1 = 5
+        kwcounter = self.container.GetTable('PasswordManager')['keywords']
+        # keys = list(kwcounter.keys())
+        L = [kv[0] for kv in sorted(kwcounter.items(), key=lambda x: x[1])]
+        L1 = L[0:LenL1]
+        L2 = L[LenL1:]
+        return L1,L2
+
+
+
+
+
 
 
 
@@ -199,7 +219,6 @@ def PasswordAddKeyvalPair(Class,item):
         obj  = ObjItem(Class=Class,Item=item)
         r = obj.InserKeyvalPair(key=key,val=val,time=time)
         if r[0]:
-            obj.Save()
             #---count key frequency
             container = app.config['DATA_CONTAINER']
             kwcounter = container.GetTable('PasswordManager')['keywords']
@@ -207,6 +226,7 @@ def PasswordAddKeyvalPair(Class,item):
                 kwcounter[key] += 1
             else:
                 kwcounter[key]  = 1
+            obj.Save()
             return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
         else:
             flask.flash(r[1])
