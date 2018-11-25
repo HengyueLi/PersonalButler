@@ -70,11 +70,78 @@ function getInputTimeSecs{{uid}}() {
   var Minu = document.getElementById('TimeMinutes{{uid}}').value;
   var secs = document.getElementById('TimeSeconds{{uid}}').value;
   var tobj = getDateByLocaltime(Year,Mont,date,Hour,Minu,secs)
-  var secs = getSecsByDateobj(tobj)                                 
+  var secs = getSecsByDateobj(tobj)
   return secs
 }
 
 </script>
 
+
+{%- endmacro %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% macro BootstrapModalBody(uid,head=None) %}
+<div class="modal fade" id="{{uid}}" tabindex="-1" role="dialog" aria-labelledby="{{uid}}Label" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="{{uid}}Label">{% if head != None %}{{head}}{% endif %}</h5>
+         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+           <span aria-hidden="true">&times;</span>
+         </button>
+       </div>
+       {{ caller() }}
+    </div>
+  </div>
+</div>
+{%- endmacro %}
+
+
+
+
+
+{% macro ClickToClipboard(txt,class="") %}
+{% set uid = range(1000000000, 9999999999) | random  %}
+
+<input onclick = "ClickToClipboard{{uid}}()"  class = "{{class}}"  value="{{txt}}" id="txt{{uid}}">
+
+<script>
+function ClickToClipboard{{uid}}() {
+  var copyText = document.getElementById("txt{{uid}}");
+  copyText.select();
+  document.execCommand("copy");
+}
+
+</script>
 
 {%- endmacro %}

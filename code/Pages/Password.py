@@ -16,10 +16,12 @@ class AddItemForm(FlaskForm):
     item = StringField('item')
     time = FloatField('time')
 
-class AddKeyValPair(FlaskForm):
+class KeyValPairForm(FlaskForm):
     key  = StringField('key')
     val  = StringField('val')
     time = FloatField('time')
+
+
 
 
 
@@ -137,7 +139,7 @@ def PasswordClass(Class):
 def PasswordItem(Class,item):
     classform = AddClassForm()
     itemform  = AddItemForm()
-    kvform    = AddKeyValPair()
+    kvform    = KeyValPairForm()
     objitem   = ObjItem( Class=Class , Item=item )
 
     return flask.render_template('Password.html/PasswordItem.html.j2',
@@ -211,7 +213,7 @@ def PasswordAddItem(Class):
 @app.route('/PasswordAddKeyvalPair/<string:Class>/<string:item>',methods=['post'])
 @permission.ValidForLogged
 def PasswordAddKeyvalPair(Class,item):
-    form = AddKeyValPair()
+    form = KeyValPairForm()
     if form.validate_on_submit():
         key  = form.key .data
         val  = form.val .data
@@ -233,3 +235,23 @@ def PasswordAddKeyvalPair(Class,item):
             return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
     flask.flash("error! not valid submit in PasswordAddKeyvalPair")
     return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
+
+
+# @app.route('/ReviseKeyvalPair/<string:Class>/<string:item>',methods=['post'])
+# @permission.ValidForLogged
+# def ReviseKeyvalPair(Class,item):
+#     form = KeyValPairForm()
+#     if form.validate_on_submit():
+#         key  = form.key .data
+#         val  = form.val .data
+#         time = form.time.data
+#         obj  = ObjItem(Class=Class,Item=item)
+#         r = obj.InserKeyvalPair(key=key,val=val,time=time)
+#         if r[0]:
+#             pass
+#             return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
+#         else:
+#             flask.flash(r[1])
+#             return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
+#     flask.flash("error! not valid submit in PasswordAddKeyvalPair")
+#     return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
