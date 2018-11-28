@@ -55,6 +55,7 @@ class ObjItem():
         if self.item is None:
             self.IsInitiated = False
         self.data = self.item['data']
+        self.actRec = self.item['actions']
         self.IsInitiated = True
 
 
@@ -62,7 +63,7 @@ class ObjItem():
         self.container.Save()
 
     def RecordAction(self,actype,actime,actkey,actval):
-        # actype = [ 'create' , 'change' ]
+        # actype = [ 'create' , 'change' , 'delete' ]
         al = self.item['actions']
         al.append({
             'actype':actype,
@@ -77,6 +78,20 @@ class ObjItem():
             return [False,'key {} exists in iterm!'.format(key)]
         self.item['data'][key] = val
         self.RecordAction(actype='create',actime=time,actkey=key,actval=val)
+        return [True,0]
+
+    def ReSetValue(self,key,val,time):
+        if key not in self.item['data']:
+            return [False,'key {} does not exist in iterm!'.format(key)]
+        self.item['data'][key] = val
+        self.RecordAction(actype='change',actime=time,actkey=key,actval=val)
+        return [True,0]
+
+    def DeleteKey(self,key,time):
+        if key not in self.item['data']:
+            return [False,'key {} does not exist in iterm!'.format(key)]
+        del self.item['data'][key]
+        self.RecordAction(actype='delete',actime=time,actkey=key,actval= '')
         return [True,0]
 
 
@@ -152,7 +167,17 @@ def PasswordItem(Class,item):
 
 
 
+@app.route('/PasswordActionRecord/<string:Class>/<string:item>')
+@permission.ValidForLogged
+def PasswordActionRecord(Class,item):
 
+    itemobj   = ObjItem( Class=Class , Item=item )
+
+    return flask.render_template('Password.html/PasswordActionRecord.html.j2',
+    app = app,
+    itemobj = itemobj ,
+ 
+    )
 
 
 
@@ -237,21 +262,44 @@ def PasswordAddKeyvalPair(Class,item):
     return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
 
 
-# @app.route('/ReviseKeyvalPair/<string:Class>/<string:item>',methods=['post'])
-# @permission.ValidForLogged
-# def ReviseKeyvalPair(Class,item):
-#     form = KeyValPairForm()
-#     if form.validate_on_submit():
-#         key  = form.key .data
-#         val  = form.val .data
-#         time = form.time.data
-#         obj  = ObjItem(Class=Class,Item=item)
-#         r = obj.InserKeyvalPair(key=key,val=val,time=time)
-#         if r[0]:
-#             pass
-#             return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
-#         else:
-#             flask.flash(r[1])
-#             return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
-#     flask.flash("error! not valid submit in PasswordAddKeyvalPair")
-#     return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
+@app.route('/ReviseKeyvalPair/<string:Class>/<string:item>',methods=['post'])
+@permission.ValidForLogged
+def ReviseKeyvalPair(Class,item):
+    form = KeyValPairForm()
+    Return = flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
+    if form.validate_on_submit():
+        key  = form.key .data
+        val  = form.val .data
+        time = form.time.data
+        obj  = ObjItem(Class=Class,Item=item)
+        if obj.IsInitiated:
+            r = obj.ReSetValue(key,val,time)
+            if r[0]:
+                obj.Save()
+            else:
+                flask.flash(r[1])
+            return Return
+        else:
+            flask.flash( "(class={},key={}) is not found".foramt(Class,key))
+            return Return
+    flask.flash("error! not valid submit in ReviseKeyvalPair")
+    return Return
+
+
+
+
+@app.route('/DeleteKeyvalPair/<string:Class>/<string:item>',methods=['post'])
+@permission.ValidForLogged
+def DeleteKeyvalPair(Class,item):
+    form = KeyValPairForm()
+    Return = flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
+    if form.validate_on_submit():
+        key  = form.key .data
+        val  = form.val .data
+        time = form.time.data
+        obj = ObjItem(Class=Class,Item=item)
+        obj.DeleteKey(key=key,time=time)
+        obj.Save()
+        return Return
+    flask.flash("error! not valid submit in DeleteKeyvalPair")
+    return Return
