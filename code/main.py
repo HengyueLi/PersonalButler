@@ -8,7 +8,7 @@ Code_path     = os.path.dirname(os.path.abspath(__file__))
 Project_path  = os.path.dirname(Code_path)
 PagesPath     = os.path.join(Code_path, "Pages")
 serverside    = os.path.join(Code_path, "server")
-datafile      = os.path.join(Code_path, "profile.dat")
+datafile      = os.path.join(os.getcwd(), "profile.dat")
 
 sys.path.insert(0, PagesPath )
 sys.path.insert(0, serverside)
@@ -55,4 +55,4 @@ from Pages import *
 #--------------------------------------------------------------------------------------------
 #    Run
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug= True )
+    app.run(host='0.0.0.0', port=4999, debug= True )

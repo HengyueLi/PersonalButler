@@ -95,9 +95,6 @@ class ObjItem():
         return [True,0]
 
 
-    # def GetKeyValCounter(self):
-    #     kwcounter = self.container.GetTable('PasswordManager')['keywords']
-    #     return kwcounter
 
 
     # return List1,List2,   List2 contains the less porpular keys
@@ -107,6 +104,7 @@ class ObjItem():
         kwcounter = self.container.GetTable('PasswordManager')['keywords']
         # keys = list(kwcounter.keys())
         L = [kv[0] for kv in sorted(kwcounter.items(), key=lambda x: x[1])]
+        L = list(reversed(L))
         L1 = L[0:LenL1]
         L2 = L[LenL1:]
         return L1,L2
@@ -176,7 +174,7 @@ def PasswordActionRecord(Class,item):
     return flask.render_template('Password.html/PasswordActionRecord.html.j2',
     app = app,
     itemobj = itemobj ,
- 
+
     )
 
 

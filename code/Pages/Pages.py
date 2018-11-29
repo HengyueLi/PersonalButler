@@ -13,6 +13,9 @@ from login import *
 #
 from SignUp import *
 #
+from ChangePassword import *
+#
 from profile import *
 #
 from Password import *
+#

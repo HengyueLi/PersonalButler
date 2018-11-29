@@ -8,6 +8,7 @@ import flask,os
 
 
 
+
 @app.route('/')
 def index():
     if os.path.exists(app.config['PROFILE_DATA_FILE']):

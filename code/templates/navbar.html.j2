@@ -7,7 +7,7 @@
 </div>
 
 
-
+{% import 'objects.html.j2' as OBJ %}
 
 
 
@@ -32,6 +32,8 @@
     <link href="{{url_for('static',filename='others/docsearch.min.css')}}" rel="stylesheet">
 
     <link href="{{url_for('static',filename='others/docs.min.css')}}" rel="stylesheet">
+
+    <link href="{{url_for('static',filename='fontawesome-free-5.5.0-web/css/all.css')}}" rel="stylesheet"> <!--load all styles -->
 
 
 
@@ -68,7 +70,18 @@
   <body>
 
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <a class="navbar-brand" href="#">Navbar</a>
+      <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+
+      <div class="btn-group" role="group">
+         <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+           Setting
+         </button>
+         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+          <a class="dropdown-item" href="{{url_for('ChangePassword')}}" >change <i class="fas fa-key"></i></a>
+         </div>
+       </div>
+
+
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -77,7 +90,7 @@
         <ul class="navbar-nav mr-auto">
           <!-- <li class="nav-item active"> -->
           <li class="nav-item">
-            <a class="nav-link" href="{{url_for('Password')}}">Password</a>
+            <a id='nabbar_button_password' class="nav-link" href="{{url_for('Password')}}">Password</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="#">Relation</a>
@@ -107,6 +120,37 @@
 
       </div>
     </nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- modal for change password -->
+{% call OBJ.BootstrapModalBody(uid='ModalChangePassword',head=None) %}
+
+{% endcall %}
+
+
+
+
+
+
+
+
+
 
 
 
