@@ -51,7 +51,10 @@ class ObjItem():
 
     def __init__(self,Class,Item):
         self.container = app.config['DATA_CONTAINER']
-        self.item = self.container.GetTable('PasswordManager')['class'][Class].get(Item,None)
+        self.allclass  = self.container.GetTable('PasswordManager')['class']
+        self.classdict = self.allclass[Class]
+        self.itemname  = Item
+        self.item      = self.classdict.get(Item,None)
         if self.item is None:
             self.IsInitiated = False
         self.data = self.item['data']
@@ -93,6 +96,16 @@ class ObjItem():
         del self.item['data'][key]
         self.RecordAction(actype='delete',actime=time,actkey=key,actval= '')
         return [True,0]
+
+    def Reclassify(self,newclass):
+        DesCls = self.allclass[newclass]
+        check = DesCls.get(self.itemname,None)
+        if check is None:
+            DesCls[self.itemname] = dict(self.item)
+            del self.classdict[self.itemname]
+            return [True,0]
+        else:
+            return [ False,"item '{}' already exists in the destination class '{}' ".format(self.itemname,newclass)  ]
 
 
 
@@ -301,3 +314,20 @@ def DeleteKeyvalPair(Class,item):
         return Return
     flask.flash("error! not valid submit in DeleteKeyvalPair")
     return Return
+
+
+@app.route('/ReclassifyItem/<string:Class>/<string:item>/<string:ClassNew>',methods=['get'])
+@permission.ValidForLogged
+def ReclassifyItem(Class,item,ClassNew):
+    if Class != ClassNew:
+        itmobj = ObjItem(Class,item)
+        r = itmobj.Reclassify( ClassNew )
+        if r[0]:
+            returncls = ClassNew
+            itmobj.Save()
+        else:
+            flask.flash(r[1])
+    else:
+        flask.flash("please choose a different class")
+        returncls = Class
+    return flask.redirect( flask.url_for('PasswordItem' , Class = returncls , item = item )  )
