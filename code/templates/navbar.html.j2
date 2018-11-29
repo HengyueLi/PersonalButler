@@ -171,7 +171,7 @@
    }
 
    function getDateByLocaltime(Y,M,D,h,m,s){
-     var d = new Date(Y,M,D,h,m,s);
+     var d = new Date(Y,M-1,D,h,m,s);
      // d.setTime( d.getTime()  );
      return d
    }
