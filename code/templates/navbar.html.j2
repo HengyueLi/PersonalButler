@@ -1,5 +1,5 @@
 
-<div style="display: none;">
+<div id="navbartop" style="display: none;">
   <!-- global variables for every page. -->
  {% set container = app.config['DATA_CONTAINER'] %}
  {% set passwordm = container.GetTable('PasswordManager') %}
@@ -221,7 +221,10 @@
    }
 
 
-
+   function ScrollIntoView(id){
+     // document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'nearest'});
+     document.getElementById(id).scrollIntoView(false);
+   }
 
 
 
