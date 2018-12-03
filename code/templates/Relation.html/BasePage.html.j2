@@ -1,0 +1,114 @@
+{% extends "navbar.html.j2" %}
+{% import 'Relation.html/objects.html.j2' as RO  %}
+
+{% block head %}
+
+
+<script>
+window.onload = function activate_navbar_PasswordButton() {
+document.getElementById("nabbar_button_relation").classList.add("active")
+}
+</script>
+
+
+
+
+
+<style>
+
+
+.Namelist_frame_fixedbox {
+  height: 60%;
+  width:  20%;
+  /* border:groove; */
+}
+
+.Namelist_frame_title {
+  background-color: grey;
+  height: 5%;
+  width:  100%;
+}
+
+.listgroup-scroll {
+  overflow-y: scroll;
+  width:  100%;
+  height: 95%
+
+}
+
+
+
+
+</style>
+
+
+
+
+
+
+
+{% endblock %}
+
+
+
+
+<!-- >>>>>>>>>>>>>> main >>>>>>>>>>>>>>>>>>>>>>>>>> -->
+{% block main %}
+
+
+
+<div class="jumbotron">
+  <div class="container">
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+      <div class="input-group">
+        <form class="form-inline my-2 my-lg-0">
+          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container">
+
+
+
+
+
+
+  <!-- >>>>>>>>>>>>> name list >>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
+  <div class='row border Namelist_frame_fixedbox' >
+
+
+      <center class='Namelist_frame_title' >
+        <strong >Name</strong>
+      </center>
+
+      <div class="list-group listgroup-scroll" >
+          <a href="#" class="list-group-item list-group-item-action ">class1</a>
+      </div>
+
+
+
+  </div>
+  <!-- name list <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+{% endblock %}
+<!-- <<<<<<<<<<<< main <<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
