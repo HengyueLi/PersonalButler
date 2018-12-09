@@ -124,7 +124,16 @@
           <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form> -->
-        <a class="btn btn-danger" href="{{url_for('shutdownserver')}}" role="button">shutdown</a>
+
+
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+          <div class="btn-group" role="group" >
+          {% block UpRightButton %}
+          {% endblock %}
+            <a class="btn btn-danger btn-lg" href="{{url_for('shutdownserver')}}" role="button"><i class="fas fa-power-off"></i></a>
+          </div>
+        </div>
+
 
 
       </div>
