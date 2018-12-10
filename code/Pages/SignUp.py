@@ -24,16 +24,22 @@ def CreateNewData(app,password):
     #=======================================================
     #    PasswordManager
     container.CreateTableIfNotExist('PasswordManager')
-    g = container.GetTable('PasswordManager')
+    PassMan = container.GetTable('PasswordManager')
     #---------------------------
     #   set items into classes
-    g['class'] = {}
+    PassMan['class'] = {}
     #---------------------------
-    #   remember popular keywords    :   key:number  
-    g['keywords'] = {}
-    #-------------------------------------------------------
+    #   remember popular keywords    :   key:number
+    PassMan['keywords'] = {}
+    #=======================================================
+    #    Relations
     container.CreateTableIfNotExist('Relations')
+    relations = container.GetTable('Relations')
+    relations['people'] = {}
+    #=======================================================
+    #    Diary
     container.CreateTableIfNotExist('Diary')
+    #-------------------------------------------------------
     container.Save()
 
 

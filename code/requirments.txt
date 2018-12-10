@@ -2,11 +2,13 @@ certifi==2018.10.15
 chardet==3.0.4
 Click==7.0
 Flask==1.0.2
+Flask-Markdown==0.3
 Flask-Moment==0.6.0
 Flask-WTF==0.14.2
 idna==2.7
 itsdangerous==1.1.0
 Jinja2==2.10
+Markdown==3.0.1
 MarkupSafe==1.1.0
 Naked==0.1.31
 pycrypto==2.6.1

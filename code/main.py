@@ -27,7 +27,10 @@ app.config['DATA_CONTAINER'] = {}
 #      time js
 from flask_moment import Moment
 moment = Moment(app)
-
+#-------------------------------------------------------------------------------------------
+#      markdown support
+import flaskext.markdown 
+flaskext.markdown.Markdown(app)
 
 
 
