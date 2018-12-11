@@ -48,7 +48,8 @@
 
     <!-- sweet alert  -->
     <script src="{{url_for('static',filename='Usefulljs/sweetalert.min.js')}}"></script>
-
+    <!-- show markdown -->
+    <script src="{{url_for('static',filename='js/showdown.1.9.0.js')}}"></script>
 
     <!-- js __  moment -->
     {{ moment.include_moment() }}
@@ -242,6 +243,13 @@
    function ScrollIntoView(id){
      // document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'nearest'});
      document.getElementById(id).scrollIntoView(false);
+   }
+
+
+   function ConvertMakdown2Html(MDtxt) {
+     var conv = new showdown.Converter();
+     console.log(MDtxt);
+     return conv.makeHtml(MDtxt);
    }
 
 

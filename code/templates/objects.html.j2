@@ -1,7 +1,8 @@
 
 
 {#
-will return a function RefreshTime{{uid}}()  to renew time form
+will return  function:
+                       RefreshTime{{uid}}()  to renew time form
                        getInputTimeSecs{{uid}} return the seconds of the input
  #}
 
@@ -87,6 +88,19 @@ function getInputTimeSecs{{uid}}() {
 
 
 
+
+
+{#% macro ShowDateTime(moment,app,sec=None,datetime=None) %}
+  {% if sec is not None %}
+    {% set ctime = moment( app.config['fun_FUM'].gettimeobj( sec )  ).calendar() %}
+  {% endif %}
+
+  {% if datetime is not None %}
+    {% set ctime = moment( datetime  ).calendar() %}
+  {% endif %}
+
+{{ctime}}
+{%- endmacro %#}
 
 
 

@@ -1,10 +1,8 @@
 {% extends "navbar.html.j2" %}
 {% import 'Relation.html/objects.html.j2' as RO %}
 {% import 'objects.html.j2' as OBJs %}
+{% set requestpathsplit = request.path.split('/') %}
 
-
-
-{% set requestpathsplit = request.path.split('/')  %}
 {% if requestpathsplit|length >= 2 %}
   {% set peopleid = requestpathsplit[2] %}
 {% else %}
@@ -15,61 +13,69 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 {% block head %}
 <script>
-window.onload = function activate_navbar_PasswordButton() {
-document.getElementById("nabbar_button_relation").classList.add("active")
-}
+    window.onload = function activate_navbar_PasswordButton() {
+        document.getElementById("nabbar_button_relation").classList.add("active")
+    }
 </script>
-<script src="{{url_for('static',filename='js/dobpicker.js')}}"></script>
+<!-- <script src="{{url_for('static',filename='js/dobpicker.js')}}"></script> -->
 
 <style>
-.Namelist_frame_fixedbox {
-  height: 70%;                   /*   same height   */
-  width:  20%;
-  /* border:groove; */
-}
+    .Namelist_frame_fixedbox {
+        height: 70%;
+        /*   same height   */
+        width: 20%;
+        /* border:groove; */
+    }
 
-.Infor_frame_fixedbox {
-  height: 70%;                   /*   same height   */
-  width:  80%;
-  /* border:groove; */
-}
+    .Infor_frame_fixedbox {
+        height: 70%;
+        /*   same height   */
+        width: 80%;
+        /* border:groove; */
+    }
 
+    .Namelist_frame_title {
+        background-color: grey;
+        height: 5%;
+        width: 100%;
+    }
 
-.Namelist_frame_title {
-  background-color: grey;
-  height: 5%;
-  width:  100%;
-}
-
-.listgroup-scroll {
-  overflow-y: scroll;
-  width:  100%;
-  height: 95%
-}
+    .listgroup-scroll {
+        overflow-y: scroll;
+        width: 100%;
+        height: 95%
+    }
 </style>
 {% endblock %}
 
 
-
-
-
 {% block UpRightButton %}
+<button onclick="return SubmitPersonInforForm();" class="btn btn-primary btn-lg" role="button">
+    <i class="fas fa-vote-yea"></i>
+</button>
 
-<button class="btn btn-primary btn-lg" role="button"><i class="fas fa-vote-yea"></i></button>
-
+<script>
+    function SubmitPersonInforForm() {
+        document.getElementById('personinforform').submit();
+    }
+</script>
 {% endblock %}
-
-
-
 
 <!-- >>>>>>>>>>>>>> main >>>>>>>>>>>>>>>>>>>>>>>>>> -->
 {% block main %}
-
-
-
-
 
 <div class="jumbotron">
     <div class="container">
@@ -79,7 +85,7 @@ document.getElementById("nabbar_button_relation").classList.add("active")
                     <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                 </form>
-                <button data-toggle="modal" data-target="#CreateNewRelation"  type="button" class="btn btn-secondary"><i class="fas fa-user-plus"></i></button>
+                <button data-toggle="modal" data-target="#CreateNewRelation" type="button" class="btn btn-secondary"><i class="fas fa-user-plus"></i></button>
             </div>
         </div>
     </div>
@@ -96,16 +102,16 @@ document.getElementById("nabbar_button_relation").classList.add("active")
             </center>
 
             <div class="list-group listgroup-scroll">
-              {% set Peoplelist = people.getPeoplelist() %}
-              {% for id in Peoplelist %}
-                {% set obj = Peoplelist[id] %}
-                {% if peopleid == obj['id'] %}
-                  {% set active = 'active' %}
-                {% else %}
-                  {% set active = '' %}
-                {% endif %}
+                {% set Peoplelist = people.getPeoplelist() %}
+                {% for id in Peoplelist %}
+                  {% set obj = Peoplelist[id] %}
+                  {% if peopleid == obj['id'] %}
+                    {% set active = 'active' %}
+                  {% else %}
+                    {% set active = '' %}
+                  {% endif %}
                 <a href="{{url_for('Relation_people',id=obj['id'])}}" class="list-group-item list-group-item-action {{active}}">{{obj['name']}}</a>
-              {% endfor %}
+                {% endfor %}
             </div>
         </div>
         <!-- name list <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
@@ -113,209 +119,234 @@ document.getElementById("nabbar_button_relation").classList.add("active")
         <!-- >>>>>>>>>>>>> infor >>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 
         <div class='border Infor_frame_fixedbox' style="overflow-y: scroll;">
-           {% block people_infor_form %}
+            {% block people_infor_form %}
             <div style="padding:2%;">
 
                 <div class='form-div border'>
-                    <form action = '' method = 'post' >
-                    {{ people.iform.hidden_tag() }}
-                        <div class="form-row ">
-                            <div class="col-4 mb-3">
-                                <label>Name (A:28, 马)</label>
-                                <!-- <input class="form-control" type="text" id="validationDefault01" placeholder="name" value="{{people.Dict['name']}}" required> -->
-                                {{ people.iform.name(class="form-control",type="text",placeholder="name") }}
+                    <form action="{{url_for('Relation_SavePersonInfor',id=peopleid)}}" method='post' id='personinforform'>
+                        {{ people.iform.hidden_tag() }}
+                        <div class="form-row">
+                            <div class="col-6 mb-0">
+                                <label>Name (Age:{{people.age}}, {{people.zodiac}})</label>
+                                {{ people.iform.name(class="form-control",placeholder="name") }}
                             </div>
-
-                            <div class="col-4 mb-3">
-                                <label>Sex</label>
-                                <select class="custom-select " id="inlineFormCustomSelectPref">
-                                    <option value="0" selected>Choose</option>
-                                    <option value="male">male ♂</option>
-                                    <option value="female">female ♀</option>
-                                </select>
+                            <div class="col-2 mb-0">
+                                <label><i class="fas fa-male"></i>/<i class="fas fa-female"></i>
+                                </label>
+                                {{ people.iform.sex(class="custom-select")}}
                             </div>
-
-                            <div class="col-4 mb-3">
+                            <div class="col-2 mb-0">
                                 <label>MBTI</label>
-                                <select class="custom-select ">
-                                    <option value="0" selected>Choose</option>
-                                    <option value="1">INTJ</option>
-                                    <option value="2">INTP</option>
-                                    <option value="3">INFJ</option>
-                                    <option value="4">INFP</option>
-                                    <option value="5">ISTJ</option>
-                                    <option value="6">ISTP</option>
-                                    <option value="7">ISFJ</option>
-                                    <option value="8">ISFP</option>
-                                    <option value="9">ENTJ</option>
-                                    <option value="10">ENTP</option>
-                                    <option value="11">ENFJ</option>
-                                    <option value="12">ENFP</option>
-                                    <option value="13">ESTJ</option>
-                                    <option value="14">ESTP</option>
-                                    <option value="15">ESFJ</option>
-                                    <option value="16">ESFP</option>
-                                </select>
+                                {{ people.iform.MBTI(class="custom-select")}}
                             </div>
-                        </div>
-
-
-                        <div class="form-group form-inline">
-                            <div class="col-6">
-                                <label class="my-1 mr-2">Birthday</label>
-                                <div class="row">
-                                    <select class='custom-select col' id="dobday"></select>
-                                    <select class='custom-select col' id="dobmonth"></select>
-                                    <select class='custom-select col' id="dobyear"></select>
-                                </div>
-                            </div>
-
-                            <div class="col-4">
-                                <label class="my-1 mr-2">blood type</label>
-                                <input type="text" class="form-control" placeholder="blood type">
+                            <div class="col-2 mb-0">
+                                <label>blood type</label>
+                                {{ people.iform.bloodType(class="custom-select") }}
                             </div>
                         </div>
 
                         <div class="form-row">
-                            <div class="col-6">
+                            <div class="form-group col-2">
+                                <label>Birthday</label>
+                                {{ people.iform.Birthday_Day(class="custom-select") }}
+                            </div>
+                            <div class="form-group col-2">
+                                <label>&nbsp;</label>
+                                {{ people.iform.Birthday_Month(class="custom-select") }}
+                            </div>
+                            <div class="form-group col-2">
+                                <label>&nbsp;</label>
+                                {{ people.iform.Birthday_Year(class="custom-select") }}
+                            </div>
+                            <div class="form-group col-6">
+                                <label class="my-1 mr-2">&nbsp;<i class="far fa-id-card"></i></label>
+                                {{ people.iform.NationID(class="form-control",placeholder="NationID") }}
+                            </div>
+                        </div>
+
+
+                        <div class="form-row">
+                            <div class="col">
+                                <label class="my-1 mr-2"><i class="fas fa-phone"></i></label>
+                                {{ people.iform.Phone(class="form-control",placeholder="Phone") }}
+                            </div>
+                            <div class="col">
+                                <label class="my-1 mr-2"><i class="far fa-envelope"></i></label>
+                                {{ people.iform.Email(class="form-control",placeholder="Email") }}
+                            </div>
+
+                        </div>
+
+                        <div class="form-row">
+                          <div class="col">
+                              <label class="my-1 mr-2"><i class="fas fa-map-marked-alt"></i></label>
+                              {{ people.iform.Address(class="form-control",placeholder="Address") }}
+                          </div>
+                            <div class="col">
                                 <label class="my-1 mr-2">Hometown</label>
-                                <input type="text" class="form-control" placeholder="Hometown">
-                            </div>
-                            <div class="col-6">
-                                <label class="my-1 mr-2">NationID</label>
-                                <input type="text" class="form-control" placeholder="NationID">
+                                {{ people.iform.HomeTown(class="form-control",placeholder="Hometown") }}
                             </div>
                         </div>
 
                         <div class="form-row">
-                            <div class="col-4">
-                                <label class="my-1 mr-2">Phone</label>
-                                <input type="text" class="form-control" placeholder="Phone">
-                            </div>
-                            <div class="col-4">
-                                <label class="my-1 mr-2">Email</label>
-                                <input type="email" class="form-control" placeholder="NationID">
-                            </div>
-                            <div class="col-4">
+                            <div class="col">
                                 <label class="my-1 mr-2">Others:</label>
-                                <input type="text" class="form-control" placeholder="Others">
+                                {{ people.iform.Others(class="form-control",placeholder="Others") }}
                             </div>
                         </div>
+
                     </form>
                 </div>
 
                 <div class='border border-success form-row m-1 p-2'>
                     <div class='row'>
-                        <p class='col'>Working</p>
-                        <button onclick="" type="button" class="col mb-3 btn btn-primary"><i class="far fa-plus-square"></i></button>
+                        <p class='col'><i class="fas fa-globe"></i></p>
+                        <button data-toggle="modal" data-target="#appendWorkingExp" type="button" class="col mb-3 btn btn-primary"><i class="far fa-plus-square"></i></button>
                     </div>
                     <table class="table table-hover">
                         <tbody>
+                          {% for item in people.Dict['Workl'] %}
                             <tr>
-                                <td>whenwhen</td>
-                                <td>wherewhere</td>
-                                <td>whatwhat</td>
+                                <td id = "{{item['itemid']}}_when">{{item['when']}}</td>
+                                <td id = "{{item['itemid']}}_where">{{item['where']}}</td>
+                                <td id = "{{item['itemid']}}_what">{{item['what']}}</td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                                        <button onclick="" type="button" class="btn btn-secondary"><i class="fas fa-arrow-up"></i></button>
-                                        <button onclick="" type="button" class="btn btn-secondary"><i class="fas fa-arrow-down"></i></button>
-                                        <button onclick="" type="button" class="btn btn-secondary"><i class="far fa-edit"></i></button>
-                                        <button onclick="" type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                                        <button onclick="ExperienceMoveItem('Workl',{{item['itemid']}},0)" type="button" class="btn btn-secondary"><i class="fas fa-arrow-up"></i></button>
+                                        <button onclick="ExperienceMoveItem('Workl',{{item['itemid']}},2)" type="button" class="btn btn-secondary"><i class="fas fa-arrow-down"></i></button>
+                                        <button onclick="EditExperienceItem('Workl',{{item['itemid']}})"   type="button" class="btn btn-secondary"><i class="far fa-edit"></i></button>
+                                        <button onclick="ExperienceDeleteItem('Workl',{{item['itemid']}})" type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                                     </div>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
 
                 <div class='border border-primary form-row m-1 p-2'>
                     <div class='row'>
-                        <p class='col'>Education</p>
-                        <button onclick="" type="button" class="col mb-3 btn btn-primary"><i class="far fa-plus-square"></i></button>
+                        <p class='col'><i class="fas fa-graduation-cap"></i></p>
+                        <button  data-toggle="modal" data-target="#appendEducationExp" type="button" class="col mb-3 btn btn-primary"><i class="far fa-plus-square"></i></button>
                     </div>
                     <table class="table table-hover">
                         <tbody>
+                          {% for item in people.Dict['Educl'] %}
                             <tr>
-                                <td>whenwhen</td>
-                                <td>wherewhere</td>
-                                <td>whatwhat</td>
+                                <td id = "{{item['itemid']}}_when">{{item['when']}}</td>
+                                <td id = "{{item['itemid']}}_where">{{item['where']}}</td>
+                                <td id = "{{item['itemid']}}_what">{{item['what']}}</td>
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                                        <button onclick="" type="button" class="btn btn-secondary"><i class="fas fa-arrow-up"></i></button>
-                                        <button onclick="" type="button" class="btn btn-secondary"><i class="fas fa-arrow-down"></i></button>
-                                        <button onclick="" type="button" class="btn btn-secondary"><i class="far fa-edit"></i></button>
-                                        <button onclick="" type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                                        <button onclick="ExperienceMoveItem('Educl',{{item['itemid']}},0)" type="button" class="btn btn-secondary"><i class="fas fa-arrow-up"></i></button>
+                                        <button onclick="ExperienceMoveItem('Educl',{{item['itemid']}},2)" type="button" class="btn btn-secondary"><i class="fas fa-arrow-down"></i></button>
+                                        <button onclick="EditExperienceItem('Educl',{{item['itemid']}})"   type="button" class="btn btn-secondary"><i class="far fa-edit"></i></button>
+                                        <button onclick="ExperienceDeleteItem('Educl',{{item['itemid']}})" type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                                     </div>
                                 </td>
                             </tr>
+                            {% endfor %}
                         </tbody>
                     </table>
                 </div>
-
             </div>
             {% endblock %}
         </div>
     </div>
     <!-- infor  <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
 
+    <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>  recording >>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+    {% block record_border %}
+    <div class='row  recording_frame '>
 
-
-  <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>  recording >>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-  {% block record_border %}
-  <div class='row  recording_frame '>
-
-    <div class="card border-primary mb-3" style="width: 100%;">
-      <div class="card-header">Recording <button type="button" class="btn btn-primary"><i class="fas fa-folder-plus"></i></button></div>
-      <div class="card-body">
-
-
-        <!-- >>>>>>>>>>>>>>>>>> one record >>>>>>>>>>>>>>>>>>>>>> -->
         <div class="card border-primary mb-3" style="width: 100%;">
-          <div class="card-header">2018.16.15</div>
-          <div class="card-body text-primary">
-            <p class="card-text">markdown_content</p>
-          </div>
+            <div class="card-header">Recording
+                <button data-toggle="modal" data-target="#CreateNewRecored" type="button" class="btn btn-primary">
+                  <i class="fas fa-folder-plus"></i>
+                </button>
+            </div>
+            <div class="card-body">
+
+                <!-- >>>>>>>>>>>>>>>>>> one record >>>>>>>>>>>>>>>>>>>>>> -->
+                <!-- <div class="card border-primary mb-3" style="width: 100%;">
+                    <div class="card-header">2018.16.15</div>
+                    <div class="card-body text-primary">
+                        <p class="card-text">markdown_content</p>
+                    </div>
+                </div> -->
+
+                {% for record in people.Dict['Recdl'] %}
+                {% set ctime = moment( app.config['fun_FUM'].gettimeobj( record['time'] )  ).calendar() %}
+                <div class="card border-primary mb-3" style="width: 100%;">
+                    <div class="card-header"> {{ctime}} </div>
+                    <div class="card-body text-primary">
+
+                        <!-- <p class="card-text">markdown_content</p> -->
+                        <p class="card-text">{{ record['text'] |markdown }}</p>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- <<<<<<<<<<<<<<<<<<<<<< one record <<<<<<<<<<<<<<<<<<<<<< -->
+
+            </div>
         </div>
-        <!-- <<<<<<<<<<<<<<<<<<<<<< one record <<<<<<<<<<<<<<<<<<<<<< -->
-
-
-      </div>
     </div>
-  </div>
-  {% endblock %}
-  <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<  recording <<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
+
+    <!-- modal :  create new record -->
+    {% call OBJs.BootstrapModalBody(uid = 'CreateNewRecored' , head = 'Append New Record' ) %}
+    {{OBJs.DateTimebock(uid='CreateNewRecored_time',IsShowTime = False )}}
+    <form id = 'relation_form_record' action="{{url_for('Relation_AppendNewRecord',id=peopleid)}}" method='post'>
+        {{ people.recform.hidden_tag() }}
+        <div class="modal-body">
+            <div class="form-group">
+                <label  class="col-form-label">Record:</label>
+                {{ people.recform.record(class="form-control",style="height: 200px;", id = 'CreateNewRecored_txt' ) }}
+                <div style="display:none">{{ people.recform.time(id = 'CreateNewRecored_time')}}</div>
+            </div>
+            <div class="form-group">
+                <label  class="col-form-label">Preview:</label>
+                <div style="height: 200px;" id = 'CreateNewRecored_txt_pre'></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button onclick="return checksubmitrecord();" type="submit" class="btn btn-primary">append</button>
+        </div>
+    </form>
+
+    <script>
+    // refresh time when wake up "CreateNewRecored"
+    $('#CreateNewRecored').on('show.bs.modal', function (e) {
+      RefreshTimeCreateNewRecored_time();
+    })
+
+    // txt preview
+    document.getElementById("CreateNewRecored_txt").addEventListener("input", function(){
+      var input = document.getElementById("CreateNewRecored_txt").value
+      var previewboard = document.getElementById("CreateNewRecored_txt_pre");
+      previewboard.innerHTML = ConvertMakdown2Html(input)
+    } );
+
+    function checksubmitrecord() {
+      document.getElementById('CreateNewRecored_time' ).value = getInputTimeSecsCreateNewRecored_time()
+      document.getElementById('relation_form_record').submit();
+      return true
+    }
+
+
+
+
+
+    </script>
+    {% endcall %}
+
+
+
+
+    {% endblock %}
+    <!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<  recording <<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
 
 </div>
-
-<script>
-    $(document).ready(function() {
-        $.dobPicker({
-            daySelector: '#dobday',
-            /* Required */
-            monthSelector: '#dobmonth',
-            /* Required */
-            yearSelector: '#dobyear',
-            /* Required */
-            dayDefault: 'Day',
-            /* Optional */
-            monthDefault: 'Month',
-            /* Optional */
-            yearDefault: 'Year',
-            /* Optional */
-            minimumAge: 0,
-            /* Optional */
-            maximumAge: 100 /* Optional */
-        });
-    });
-</script>
-
-
-
-
-
-
-
-
 
 
 
@@ -328,14 +359,14 @@ document.getElementById("nabbar_button_relation").classList.add("active")
 
 
 <!-- modal :  create new relation -->
-{% call OBJs.BootstrapModalBody(uid = 'CreateNewRelation' , head =  None ) %}
-<form action = "{{url_for('Relation_createnew')}}" method='post' >
-  {{ people.form1.hidden_tag() }}
+{% call OBJs.BootstrapModalBody(uid = 'CreateNewRelation' , head = None ) %}
+<form action="{{url_for('Relation_createnew')}}" method='post'>
+    {{ people.form1.hidden_tag() }}
     <div class="modal-body">
-      <div class="form-group">
-          <label for="recipient-name" class="col-form-label">Name:</label>
-          {{ people.form1.file1(type="text", class="form-control", id="createnew-name") }}
-      </div>
+        <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Name:</label>
+            {{ people.form1.file1(type="text", class="form-control", id="createnew-name") }}
+        </div>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -353,12 +384,115 @@ document.getElementById("nabbar_button_relation").classList.add("active")
 
 
 
+<!-- modal :  append experience (for work and education) -->
+{% macro ModalAppendExperience(uid,Expform,action,head=None) %}
+{% call OBJs.BootstrapModalBody(uid = uid,head=head) %}
+<form action="{{action}}" method='post' id = "{{uid}}_form">
+  {{Expform.hidden_tag()}}
+    <div class="modal-body">
+      <div class="form-group">
+        <label for="when" class="col-form-label">when</label>
+        {{Expform.when(class="form-control",id =uid+"_when" )}}
+      </div>
+      <div class="form-group">
+        <label for="where" class="col-form-label">where</label>
+        {{Expform.where(class="form-control",id =uid+"_where")}}
+      </div>
+      <div class="form-group">
+        <label for="what" class="col-form-label">what</label>
+        {{Expform.what(class="form-control",id =uid+"_what")}}
+      </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">append</button>
+    </div>
+</form>
+{% endcall %}
+{%- endmacro %}
+
+<!-- working experience -->
+{{ModalAppendExperience(
+  uid='appendWorkingExp',
+  Expform=people.expform,
+  head="Working Exp.",
+  action=url_for('Relation_WriteExperience',id=peopleid,category='Workl',itemid = 0),
+  )}}
+
+<!-- education experience -->
+{{ModalAppendExperience(
+  uid='appendEducationExp',
+  Expform=people.expform,
+  head="Education Exp.",
+  action=url_for('Relation_WriteExperience',id=peopleid,category='Educl',itemid = 0),
+  )}}
+
+
+<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+<!-- edit experience -->
+{{ModalAppendExperience(
+  uid='EditExperience',
+  Expform=people.expform,
+  head="Edit Experience",
+  action=url_for('Relation_WriteExperience',id=peopleid,category='Educl',itemid = 0),
+  )}}
+<script>
+ function EditExperienceItem(category,itemid,when,where,what) {
+
+   var action = "{{url_for('Relation_WriteExperience',id=peopleid,category='category',itemid = 6666)}}";
+
+   action = action.replace('category',category )
+   action = action.replace('6666',itemid       )
+
+   document.getElementById("EditExperience_when").value  = document.getElementById(itemid+"_when").innerText ;
+   document.getElementById("EditExperience_where").value = document.getElementById(itemid+"_where").innerText;
+   document.getElementById("EditExperience_what").value  = document.getElementById(itemid+"_what").innerText;
+   document.getElementById("EditExperience_form").action = action;
+  $('#EditExperience').modal('show');
+ }
+
+</script>
+<!-- <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
 
 
 
 
 
+<script>
+function ExperienceMoveItem(category,itemid,DeltaStep) {
+  //                                                   string    string              int         int
+  var URL = "{{url_for('Relation_Experience_MoveItem',id='Sid',category='category',itemid=6666,DeltaStep=7777)}}"
+  URL = URL.replace('Sid','{{peopleid}}')
+  URL = URL.replace('category',category )
+  URL = URL.replace('6666',itemid       )
+  URL = URL.replace('7777',DeltaStep    )
+  location.href = URL;
+}
 
+function ExperienceDeleteItem(category,itemid) {
+  swal({
+    title: "Are you sure?",
+    text: "Once deleted, you will not be able to recover this!",
+    icon: "warning",
+    buttons: true,
+    dangerMode: true,
+  })
+  .then((willDelete) => {
+    if (willDelete) {
+      //                                                     string     string              int
+      var URL = "{{url_for('Relation_Experience_DeleteItem',id='Sid',category='category',itemid=6666)}}"
+      URL = URL.replace('Sid','{{peopleid}}')
+      URL = URL.replace('category',category )
+      URL = URL.replace('6666',itemid       )
+      location.href = URL;
+    }
+  });
+}
+
+
+
+
+</script>
 
 
 {% endblock %}
