@@ -272,7 +272,7 @@
                 {% set ctime = moment( app.config['fun_FUM'].gettimeobj( record['time'] )  ).calendar() %}
                 <div class="card border-primary mb-3" style="width: 100%;">
                     <div class="card-header"> {{ctime}}
-                      <button onclick="EditeRecoredButton({{record['time']}},`{{record['text']}}`,{{record['itemid']}})" type="button" class="btn btn-light btn-lg">
+                      <button onclick="EditeRecoredButton({{record['time']}},{{record['itemid']}})" type="button" class="btn btn-light btn-lg">
                         <i class="far fa-edit"></i>
                       </button>
                       <button onclick="DeleteRecoredButton({{record['itemid']}})" type="button" class="btn btn-outline-danger btn-lg">
@@ -282,6 +282,7 @@
                     <div class="card-body text-primary">
                         <p class="card-text">{{ record['text'] |markdown }}</p>
                     </div>
+                    <p id="hidetxt{{record['itemid']}}" style='display:none'>{{record['text']}}</p>
                 </div>
                 <!-- <<<<<<<<<<<<<<<<<<<<<< one record <<<<<<<<<<<<<<<<<<<<<< -->
                 {% endfor %}
@@ -293,7 +294,7 @@
 
 
     <!-- modal :  create&revices record -->
-    {% call OBJs.BootstrapModalBody(uid = 'CreateNewRecored' , head = 'Append New Record' ) %}
+    {% call OBJs.BootstrapModalBody(uid = 'CreateNewRecored' , head = 'Append&modify Record' ) %}
     {{OBJs.DateTimebock(uid='CreateNewRecored_time',IsShowTime = False )}}
     <form id = 'relation_form_record' action="" method='post'>
         {{ people.recform.hidden_tag() }}
@@ -305,7 +306,7 @@
             </div>
             <div class="form-group">
                 <label  class="col-form-label">Preview:</label>
-                <div class="border" style="height: 200px;" id = 'CreateNewRecored_txt_pre'></div>
+                <div class="border" style="height:200px;overflow-y: scroll;" id = 'CreateNewRecored_txt_pre'></div>
             </div>
         </div>
         <div class="modal-footer">
@@ -352,10 +353,11 @@
       $('#CreateNewRecored').modal()
     }
 
-    function EditeRecoredButton(sec,currentrecord,itemid) {
+    function EditeRecoredButton(sec,itemid) {
       //   copy time
       SetFormTimeBySecCreateNewRecored_time(sec)
       //   copy recored
+      var currentrecord = document.getElementById("hidetxt"+itemid).innerHTML
       document.getElementById("CreateNewRecored_txt").value = currentrecord;
       //   set action
       var action = "{{url_for('Relation_EditeRecord',id=peopleid,itemid=6666)}}"
