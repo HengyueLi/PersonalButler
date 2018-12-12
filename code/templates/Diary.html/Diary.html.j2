@@ -1,0 +1,98 @@
+{% extends "navbar.html.j2" %}
+
+
+
+{% block head %}
+<script>
+    window.onload = function activate_navbar_PasswordButton() {
+        document.getElementById("nabbar_button_diary").classList.add("active")
+    }
+</script>
+{% endblock %}
+
+
+
+
+
+{% macro DairyShowItem(uid,buttontxt,parentid,text,IsShow = False ) %}
+<div class="card">
+  <div class="card-header" id="headingOne{{uid}}">
+    <h5 class="mb-0">
+      {% if IsShow %}{% set TF = 'true' %}{% else %}{% set TF ='false' %}{% endif %}
+      <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne{{uid}}" aria-expanded="{{TF}}" aria-controls="collapseOne{{uid}}">
+        {{buttontxt}}
+      </button>
+    </h5>
+  </div>
+                        <!-- "collapse show"    -->
+  {% if IsShow %}{% set show = 'show' %}{% else %}{% set show ='' %}{% endif %}
+  <div id="collapseOne{{uid}}" class="collapse {{show}}" aria-labelledby="headingOne{{uid}}" data-parent="#{{parentid}}">
+    <div class="card-body"><pre>{{text}}</pre></div>
+  </div>
+</div>
+{%- endmacro %}
+
+
+
+
+
+{% block UpRightButton %}
+<a href="{{url_for('Diary_createNew')}}" role="button" aria-pressed="true" class="btn btn-lg btn-success">
+  <i class="far fa-calendar-plus"></i>
+</a>
+
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+{% block main %}
+<div class='container'>
+  <div class="accordion" id="FrameaccordionExample">
+
+    {{DairyShowItem(
+      uid       = 1,
+      buttontxt = '2018',
+      parentid  ='FrameaccordionExample',
+      text      = 'fjdnf',
+      IsShow    = False,
+      )}}
+
+
+
+
+
+  </div>
+
+
+
+
+
+  <!-- <nav class='row' style="mb-5" aria-label="...">
+    <ul class="pagination">
+      <li class="page-item disabled">
+        <a class="page-link" href="#" tabindex="-1">Previous</a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item active">
+        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#">Next</a>
+      </li>
+    </ul>
+  </nav> -->
+
+
+
+
+</div>
+{% endblock %}

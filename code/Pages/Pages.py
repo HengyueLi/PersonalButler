@@ -21,4 +21,6 @@ from Password import *
 #
 from Relation import *
 #
+from Diary import *
+#
 from shutdownserver import *

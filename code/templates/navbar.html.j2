@@ -106,7 +106,7 @@
             <a id='nabbar_button_relation' class="nav-link" href="{{url_for('Relation_list')}}">Relation</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link disabled" href="#">Diary</a>
+            <a id='nabbar_button_diary' class="nav-link" href="{{url_for('Diary',pageindex=1)}}">Diary</a>
           </li>
 
 
@@ -208,7 +208,8 @@
 
 
     <footer class="footer">
-
+      {% block footer %}
+      {% endblock %}
     </footer>
 
 

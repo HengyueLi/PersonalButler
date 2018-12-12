@@ -39,6 +39,8 @@ def CreateNewData(app,password):
     #=======================================================
     #    Diary
     container.CreateTableIfNotExist('Diary')
+    diary = container.GetTable('Diary')
+    diary['list'] = []      # 
     #-------------------------------------------------------
     container.Save()
 
