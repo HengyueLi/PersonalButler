@@ -110,7 +110,7 @@
                   {% else %}
                     {% set active = '' %}
                   {% endif %}
-                <a href="{{url_for('Relation_people',id=obj['id'])}}" class="list-group-item list-group-item-action {{active}}">{{obj['name']}}</a>
+                <a id="listshow_{{id}}" href="{{url_for('Relation_people',id=obj['id'])}}" class="list-group-item list-group-item-action {{active}}">{{obj['name']}}</a>
                 {% endfor %}
             </div>
         </div>
@@ -542,9 +542,29 @@ function ExperienceDeleteItem(category,itemid) {
 }
 
 
-
-
 </script>
+
+
+
+
+
+
+
+
+
+
+
+<script>
+document.addEventListener('readystatechange', event => {
+  if (event.target.readyState === "complete") {
+    ScrollIntoView("listshow_{{peopleid}}");
+  }
+});
+</script>
+
+
+
+
 
 
 {% endblock %}
