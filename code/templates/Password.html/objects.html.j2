@@ -5,12 +5,53 @@
 
 {% macro SearchPasswordIterm() %}
 <div class="input-group">
-  <form class="form-inline my-2 my-lg-0">
-    <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-  </form>
+  <div class="form-inline my-2 my-lg-0">
+    <input id = 'searchpassword_inputtxt' class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+    <button onclick="SubmitSearchPassword()" class="btn btn-outline-success my-2 my-sm-0" >Search</button>
+  </div>
 </div>
+
+<script>
+  function SubmitSearchPassword() {
+    var txt = document.getElementById("searchpassword_inputtxt").value
+    var Url = "{{url_for('Password_Search',txt='txt')}}"
+    Url = Url.replace('txt',txt)
+
+    $.ajax({
+      url: Url,
+      error: function(xhr, statusText, err) {
+        swal("error"+xhr.status);
+      },
+      success: function(data) {
+        document.getElementById("searchpasswordlist").innerHTML = data
+        $('#searchpasswordmodal').modal()
+      },
+      type: 'GET'
+    });
+
+}
+
+</script>
+{% call objs.BootstrapModalBody(uid='searchpasswordmodal',head='results') %}
+ <div class='list-group' id='searchpasswordlist'>
+ </div>
+{% endcall %}
+
+
 {%- endmacro %}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

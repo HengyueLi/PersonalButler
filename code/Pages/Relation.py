@@ -81,7 +81,7 @@ class People():
 
     @staticmethod
     def getPeoplelist():
-        # return {  'ID':dict   }
+        # return {  'id':dict   }
         container = app.config['DATA_CONTAINER']
         people    = container.GetTable('Relations')['people']
         return people
@@ -114,6 +114,17 @@ class People():
         year = born.year
         Zodiac = u'猴鸡狗猪鼠牛虎兔龙蛇马羊'
         return Zodiac[year%12]
+
+
+    @classmethod
+    def SearchPeople(cls,txt):
+        List = cls.getPeoplelist()
+        r = []
+        for id in List:
+            if txt in List[id]['name']:
+                r.append([List[id]['name'],List[id]['id']])
+        return r
+
 
 
 
@@ -384,4 +395,17 @@ def Relation_DeleteRecord(id,itemid):
     people.deleteRecored( itemid = itemid )
     people.SaveToDB()
     return flask.redirect(flask.url_for('Relation_people',id = id))
+        #-----------------
+
+
+
+@app.route('/Relation_SearchRecord/<string:txt>')
+@permission.ValidForLogged
+def Relation_SearchRecord(txt):
+    List = People.SearchPeople(txt)
+    def singleline(name,id):
+        url = flask.url_for('Relation_people',id = id)
+        return '''
+             <a class="list-group-item list-group-item-action" href="{}" role="button">{}</a>'''.format(url,name)
+    return str(' '.join( [ singleline(jc[0],jc[1]) for jc in  List]) )
         #-----------------

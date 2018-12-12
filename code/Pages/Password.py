@@ -46,6 +46,17 @@ class ObjItem():
         }
         return [True,   cls(Class = Class,Item = Item)   ]
 
+    @staticmethod
+    def SearchPass(txt):
+        container = app.config['DATA_CONTAINER']
+        Allclass  = container.GetTable('PasswordManager')['class']
+        r = []
+        for classkey in Allclass:
+            for itemkey in Allclass[classkey]:
+                if txt in itemkey:
+                    r.append([  classkey,  itemkey  ])
+        return r
+
 
 
 
@@ -331,3 +342,15 @@ def ReclassifyItem(Class,item,ClassNew):
         flask.flash("please choose a different class")
         returncls = Class
     return flask.redirect( flask.url_for('PasswordItem' , Class = returncls , item = item )  )
+
+
+@app.route('/Password_Search/<string:txt>')
+@permission.ValidForLogged
+def Password_Search(txt):
+    List = ObjItem.SearchPass(txt)
+    def singleline(clskey,itmkey):
+        url = flask.url_for('PasswordItem',Class=clskey,item=itmkey)
+        return '''
+         <a class="list-group-item list-group-item-action" href="{}" role="button"> {} @ {}</a>'''.format(url,itmkey,clskey)
+    return str(' '.join( [ singleline(jc[0],jc[1]) for jc in  List]) )
+        #-----------------
