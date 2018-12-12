@@ -146,7 +146,7 @@ class People():
         year  = self.Dict.get('Birthday_Year',0)
         month = self.Dict.get('Birthday_Month',0)
         day   = self.Dict.get('Birthday_Day',0)
-        if year == 0 :
+        if year == 0 or month == 0 or day == 0 :
             return None
         else:
             return datetime.date(year, month, day)
