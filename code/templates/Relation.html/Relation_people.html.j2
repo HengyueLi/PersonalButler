@@ -261,41 +261,41 @@
 
         <div class="card border-primary mb-3" style="width: 100%;">
             <div class="card-header">Recording
-                <button data-toggle="modal" data-target="#CreateNewRecored" type="button" class="btn btn-primary">
+                <!-- <button data-toggle="modal" data-target="#CreateNewRecored" type="button" class="btn btn-primary"> -->
+                <button onclick="CreateNewRecoredButton()" type="button" class="btn btn-primary">
                   <i class="fas fa-folder-plus"></i>
                 </button>
             </div>
             <div class="card-body">
-
-                <!-- >>>>>>>>>>>>>>>>>> one record >>>>>>>>>>>>>>>>>>>>>> -->
-                <!-- <div class="card border-primary mb-3" style="width: 100%;">
-                    <div class="card-header">2018.16.15</div>
-                    <div class="card-body text-primary">
-                        <p class="card-text">markdown_content</p>
-                    </div>
-                </div> -->
-
                 {% for record in people.Dict['Recdl'] %}
+                <!-- >>>>>>>>>>>>>>>>>> one record >>>>>>>>>>>>>>>>>>>>>> -->
                 {% set ctime = moment( app.config['fun_FUM'].gettimeobj( record['time'] )  ).calendar() %}
                 <div class="card border-primary mb-3" style="width: 100%;">
-                    <div class="card-header"> {{ctime}} </div>
+                    <div class="card-header"> {{ctime}}
+                      <button onclick="EditeRecoredButton({{record['time']}},`{{record['text']}}`,{{record['itemid']}})" type="button" class="btn btn-light btn-lg">
+                        <i class="far fa-edit"></i>
+                      </button>
+                      <button onclick="DeleteRecoredButton({{record['itemid']}})" type="button" class="btn btn-outline-danger btn-lg">
+                        <i class="far fa-trash-alt"></i>
+                      </button>
+                    </div>
                     <div class="card-body text-primary">
-
-                        <!-- <p class="card-text">markdown_content</p> -->
                         <p class="card-text">{{ record['text'] |markdown }}</p>
                     </div>
                 </div>
-                {% endfor %}
                 <!-- <<<<<<<<<<<<<<<<<<<<<< one record <<<<<<<<<<<<<<<<<<<<<< -->
-
+                {% endfor %}
             </div>
         </div>
     </div>
 
-    <!-- modal :  create new record -->
+
+
+
+    <!-- modal :  create&revices record -->
     {% call OBJs.BootstrapModalBody(uid = 'CreateNewRecored' , head = 'Append New Record' ) %}
     {{OBJs.DateTimebock(uid='CreateNewRecored_time',IsShowTime = False )}}
-    <form id = 'relation_form_record' action="{{url_for('Relation_AppendNewRecord',id=peopleid)}}" method='post'>
+    <form id = 'relation_form_record' action="" method='post'>
         {{ people.recform.hidden_tag() }}
         <div class="modal-body">
             <div class="form-group">
@@ -305,34 +305,84 @@
             </div>
             <div class="form-group">
                 <label  class="col-form-label">Preview:</label>
-                <div style="height: 200px;" id = 'CreateNewRecored_txt_pre'></div>
+                <div class="border" style="height: 200px;" id = 'CreateNewRecored_txt_pre'></div>
             </div>
         </div>
         <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            <button onclick="return checksubmitrecord();" type="submit" class="btn btn-primary">append</button>
+            <button onclick="return checksubmitrecord();" type="submit" class="btn btn-primary">submit</button>
         </div>
     </form>
 
     <script>
-    // refresh time when wake up "CreateNewRecored"
-    $('#CreateNewRecored').on('show.bs.modal', function (e) {
-      RefreshTimeCreateNewRecored_time();
-    })
-
-    // txt preview
-    document.getElementById("CreateNewRecored_txt").addEventListener("input", function(){
+    // modal: txt preview
+    function synchronization_input_preview(){
       var input = document.getElementById("CreateNewRecored_txt").value
       var previewboard = document.getElementById("CreateNewRecored_txt_pre");
       previewboard.innerHTML = ConvertMakdown2Html(input)
-    } );
+    }
 
+    document.getElementById("CreateNewRecored_txt").addEventListener("input", synchronization_input_preview );
+    // modal: check submit form
     function checksubmitrecord() {
       document.getElementById('CreateNewRecored_time' ).value = getInputTimeSecsCreateNewRecored_time()
       document.getElementById('relation_form_record').submit();
       return true
     }
 
+
+
+
+
+
+
+
+
+    function CreateNewRecoredButton() {
+      //   renew time
+      RefreshTimeCreateNewRecored_time();
+      //   clean input
+      document.getElementById("CreateNewRecored_txt").value = ''
+      //   set action
+      var action = "{{url_for('Relation_AppendNewRecord',id=peopleid)}}"
+      document.getElementById("relation_form_record").action = action;
+      // first call synchronization_input_preview()
+      synchronization_input_preview()
+      //   show modal
+      $('#CreateNewRecored').modal()
+    }
+
+    function EditeRecoredButton(sec,currentrecord,itemid) {
+      //   copy time
+      SetFormTimeBySecCreateNewRecored_time(sec)
+      //   copy recored
+      document.getElementById("CreateNewRecored_txt").value = currentrecord;
+      //   set action
+      var action = "{{url_for('Relation_EditeRecord',id=peopleid,itemid=6666)}}"
+      action = action.replace('6666',itemid)
+      document.getElementById("relation_form_record").action = action;
+       // first call synchronization_input_preview()
+      synchronization_input_preview()
+      //   show modal
+      $('#CreateNewRecored').modal()
+    }
+
+    function DeleteRecoredButton(itemid) {
+      swal({
+        title: "Are you sure?",
+        text: "Once deleted, you will not be able to recover this!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+          var URL = "{{url_for('Relation_DeleteRecord',id=peopleid,itemid=6666)}}"
+          URL = URL.replace('6666',itemid       )
+          location.href = URL;
+        }
+      });
+    }
 
 
 

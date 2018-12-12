@@ -2,8 +2,9 @@
 
 {#
 will return  function:
-                       RefreshTime{{uid}}()  to renew time form
-                       getInputTimeSecs{{uid}} return the seconds of the input
+                       SetFormTimeBySec{{uid}}(sec)  set form time by seconds 
+                       RefreshTime{{uid}}()          to renew time form
+                       getInputTimeSecs{{uid}}       return the seconds of the input
  #}
 
 {% macro DateTimebock(uid,IsShowTime = False ) %}
@@ -51,15 +52,28 @@ will return  function:
 
 
 <script>
-function RefreshTime{{uid}} () {
-  var nowsec = getsecnow()              ;
-  var now    = getDateobjBysecs(nowsec) ;
+
+function SetFormTimeBySec{{uid}}(sec) {
+  var now = getDateobjBysecs(sec) ;
   document.getElementById('TimeYear{{uid}}' ).value   = now.getFullYear();
   document.getElementById('TimeMonth{{uid}}').value   = now.getMonth()+1 ;
   document.getElementById('TimeDate{{uid}}' ).value   = now.getDate()    ;
   document.getElementById('TimeHour{{uid}}' ).value   = now.getHours()   ;
   document.getElementById('TimeMinutes{{uid}}').value = now.getMinutes() ;
   document.getElementById('TimeSeconds{{uid}}').value = now.getSeconds() ;
+}
+
+
+function RefreshTime{{uid}} () {
+  var nowsec = getsecnow()              ;
+  // var now    = getDateobjBysecs(nowsec) ;
+  // document.getElementById('TimeYear{{uid}}' ).value   = now.getFullYear();
+  // document.getElementById('TimeMonth{{uid}}').value   = now.getMonth()+1 ;
+  // document.getElementById('TimeDate{{uid}}' ).value   = now.getDate()    ;
+  // document.getElementById('TimeHour{{uid}}' ).value   = now.getHours()   ;
+  // document.getElementById('TimeMinutes{{uid}}').value = now.getMinutes() ;
+  // document.getElementById('TimeSeconds{{uid}}').value = now.getSeconds() ;
+  SetFormTimeBySec{{uid}}(nowsec)
 }
 
 

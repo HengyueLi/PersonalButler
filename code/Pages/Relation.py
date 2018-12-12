@@ -93,9 +93,9 @@ class People():
         plist[uid] = {
            'name'  : name ,
            'id'    : uid  ,
-           'Workl' : []   ,
+           'Workl' : []   ,        # element:  {'itemid':int,  'when':str, 'where':str, 'what':str  }
            'Educl' : []   ,
-           'Recdl' : []   ,
+           'Recdl' : []   ,        # element:  {'time':float,  'text':str,  'itemid':int  }
         }
         return cls(id = uid)
 
@@ -114,6 +114,10 @@ class People():
         year = born.year
         Zodiac = u'猴鸡狗猪鼠牛虎兔龙蛇马羊'
         return Zodiac[year%12]
+
+
+
+
 
 
 
@@ -171,6 +175,28 @@ class People():
 
 
 
+    def RerangeRecordByTime(self):
+        td = { item['time']:item for item in self.Dict['Recdl'] }
+        keys = list(td.keys())
+        keys.sort()
+        self.Dict['Recdl'] = [ td[key] for key in keys ]
+
+    def GetRecordOBJ(self,itemid):
+        for item in self.Dict['Recdl']:
+            if item['itemid'] == itemid:
+                return item
+        return None
+
+    def deleteRecored(self,itemid):
+        for jc in range(len(self.Dict['Recdl'])):
+            if self.Dict['Recdl'][jc]['itemid'] == itemid:
+                del self.Dict['Recdl'][jc]
+
+
+
+
+
+
     #----------- used for both work and education
     def WriteExpItem(self,ExpDictKey,item):    # ExpDictKey = 'Workl' /  'Educl'
         listdict = self.Dict[ExpDictKey]
@@ -187,6 +213,7 @@ class People():
                 if targetjc == -1:print('ERROR: itemid = {} is not found in {}'.format(item['itemid'],listdict))
                 listdict[targetjc] = item
             self.SaveToDB()
+
 
 
 
@@ -324,15 +351,37 @@ def Relation_AppendNewRecord(id):
                 Existjc = jc
                 break
         if Existjc is None: # new one
-            Recordlist.append({ 'time':form.time.data, 'text':text })
+            Recordlist.append({ 'time':form.time.data, 'text':text, 'itemid':GetSecId()  })
+            people.RerangeRecordByTime()
         else: # append
             Recordlist[Existjc]['text'] = Recordlist[Existjc]['text'] + "\n" + text
         people.SaveToDB()
     return flask.redirect(flask.url_for('Relation_people',id = id))
 
 
+@app.route('/Relation_EditeRecord/<string:id>/<int:itemid>', methods=['post'])
+@permission.ValidForLogged
+def Relation_EditeRecord(id,itemid):
+    people = People(id=id)
+    form = RecordForm()
+    Recordlist = people.Dict['Recdl']
+    if form.validate_on_submit():
+        record = people.GetRecordOBJ(itemid=itemid)
+        if record is None:
+            print('ERROR: itemid ={} is not found in {}'.format(itemid,people.Dict['Recdl']))
+            return 'error'
+        record['time'] = form.time.data
+        record['text'] = form.record.data
+        people.RerangeRecordByTime()
+        people.SaveToDB()
+    return flask.redirect(flask.url_for('Relation_people',id = id))
 
 
-
-
+@app.route('/Relation_DeleteRecord/<string:id>/<int:itemid>')
+@permission.ValidForLogged
+def Relation_DeleteRecord(id,itemid):
+    people = People(id=id)
+    people.deleteRecored( itemid = itemid )
+    people.SaveToDB()
+    return flask.redirect(flask.url_for('Relation_people',id = id))
         #-----------------
