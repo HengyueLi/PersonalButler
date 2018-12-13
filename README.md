@@ -7,4 +7,22 @@ This is a 'python3' application. Download the code folder and install the requir
 
 ## Usage
 
-Use command `python main.py` to start the server. After that, one open browser and visit `http://0.0.0.0:4999`. All the personal data will be saved in the file 'profile.dat'. Notice that the position of the file is the CWD (current working directory). When finished using the server, one must remember to shut down the server by simply click the shutdown-button at the up-right side of the page.   
+### set-up and  shut-down
+
+Use command `python main.py` to start the server. After that, one open browser and visit `http://0.0.0.0:4999`. All the personal data will be saved in the file 'profile.dat'. Notice that the position of the file is the CWD (current working directory). When finished using the server, one must remember to shut down the server by simply click the shutdown-button at the up-right side of the page.
+
+### create a new profile
+
+When fist login the server, one will go to a signup page. A new password is required to create a new profile. When it has done, one goes to the profile page. In the navbar, there are `setting`, `Password`, `Relation` and `Diary` button on the left side and a shutdown-button on the right side.
+
+#### Password manager
+
+All the password are classified. For each item, one can store key-value pairs.
+
+#### Relation manager
+
+One can add records for each relation.
+
+#### Diary
+
+Simple usage.
