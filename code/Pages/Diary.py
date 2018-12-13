@@ -121,13 +121,14 @@ class DiaryObj():
     @staticmethod
     def RerangeListbyTime():
         container = app.config['DATA_CONTAINER']
-        diarylist = container.GetTable('Diary')['list']
+        Diary     = container.GetTable('Diary')
+        diarylist = Diary['list']
         td = {}
         for item in diarylist:
             td[item['time']] = item
         times = list(td.keys())
-        times.sort(reverse=True)
-        diarylist = [ td[time] for time in times ]
+        times.sort(reverse=True,key=float)
+        Diary['list'] = [ td[time] for time in times ]
 
 
 
@@ -241,7 +242,6 @@ def Diary(pageindex):
 @permission.ValidForLogged
 def Diary_createNew():
     Diary = DiaryObj.GetNew()
-    Diary.RerangeListbyTime()
     Diary.SetFormbyDict()
     return flask.render_template('Diary.html/Diary_Edite.html.j2',app = app,Diary=Diary)
 
@@ -264,6 +264,7 @@ def Diary_submit():
     form = DiaryForm()
     if form.validate_on_submit():
         DiaryObj.SetEditeFormToContainer(form)
+        DiaryObj.RerangeListbyTime()
         DiaryObj.SaveToDB()
         return 'sucess'
     else:
