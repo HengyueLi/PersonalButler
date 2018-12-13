@@ -1,10 +1,89 @@
 
 from main import app,permission
-import flask
+import flask,datetime,time
 
 from flask_wtf import FlaskForm
 from wtforms import StringField,FloatField,IntegerField,TextField,validators,SelectField
 from wtforms.widgets import TextArea
+
+
+
+def GetSecId():
+    return int(datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S"))
+
+
+
+
+class SeperatePage():
+
+    def __init__(self,List,N_per_page):
+        self.List = List
+        self.M    = N_per_page
+
+    def MathStartAndEndIndexOfPage(self,pageindex):
+        start = ( pageindex - 1 ) * self.M + 1
+        end   = ( start + self.M - 1)
+        return  start,end
+
+    def IsPageIndexValid(self,pageindex):
+        s = ( pageindex - 1 ) * self.M + 1
+        return s >=1 and s <= len(self.List)
+
+
+
+    def GetStartEnd(self,index):
+        ms,me = self.MathStartAndEndIndexOfPage(pageindex=index)
+        start =  max( 1 , ms )
+        end   =  min( len(self.List) ,  me )
+        return start , end
+
+    def GetListSegmentByIndex(self,index):
+        start,end =  self.GetStartEnd(index)
+        return list(self.List[start-1:end])
+
+    def IsLeftHave(self,index): # iterm index , not page index
+        if index>1:
+            return True
+        else:
+            return False
+
+    def IsRightHave(self,index):# iterm index , not page index
+        if index * self.M < len(self.List):
+            return True
+        else:
+            return False
+
+    def GetIndexRangeList(self,index):
+        start,end =  self.GetStartEnd(index)
+        return [jc for jc in range(start,end+1)]
+
+    # return a list [ index , [  "<" , ">" , integer ] ]
+    # here index is the page index
+    def GetMutipleIndexList(self,index,Range):
+        r2 = []
+        if ( self.IsPageIndexValid( index - Range - 1 ) ): r2.append('<')
+        for testi in range( index - Range , index + Range + 1 ):
+            if self.IsPageIndexValid(testi):
+                r2.append(testi)
+        if ( self.IsPageIndexValid( index + Range + 1 ) ): r2.append('>')
+        return [ index , r2 ]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -20,6 +99,44 @@ class DiaryForm(FlaskForm):
 class DiaryObj():
 
 
+    @staticmethod
+    def SaveToDB():
+        container = app.config['DATA_CONTAINER']
+        container.Save()
+
+
+    def SetEditeFormToContainer(form):
+        Dict = {}
+        for field in form:
+            if field.id == 'csrf_token': continue
+            Dict[field.id] = field.data
+        container = app.config['DATA_CONTAINER']
+        diarylist = container.GetTable('Diary')['list']
+        for jc in range(len(diarylist)):
+            if diarylist[jc]['id'] == Dict['id']:
+                diarylist[jc] = Dict
+                return
+        print('ERROR: @SetEditeFormToContainer, id={} is not fond in diarylist'.format(['id']))
+
+    @staticmethod
+    def RerangeListbyTime():
+        container = app.config['DATA_CONTAINER']
+        diarylist = container.GetTable('Diary')['list']
+        td = {}
+        for item in diarylist:
+            td[item['time']] = item
+        times = list(td.keys())
+        times.sort(reverse=True)
+        diarylist = [ td[time] for time in times ]
+
+
+
+
+
+
+
+
+
 
     @classmethod
     def GetDiaryObjList( cls ):
@@ -29,15 +146,62 @@ class DiaryObj():
         return [ cls(Dict=d) for d in diarylist ]
 
 
+    @classmethod
+    def GetNew(cls):
+        container = app.config['DATA_CONTAINER']
+        diarylist = container.GetTable('Diary')['list']
+        Dict = {
+                'id':GetSecId() ,
+                'time':datetime.datetime.now().timestamp(), # can not use utcnow! Timezone lost ! why? I do not know!
+                'title':'',
+                'record':'',}
+        diarylist.append(Dict)
+        return cls(Dict=Dict)
+
+    @classmethod
+    def SearchId(cls,id):
+        container = app.config['DATA_CONTAINER']
+        diarylist = container.GetTable('Diary')['list']
+        for jc in range(len(diarylist)):
+            if diarylist[jc]['id'] == id:
+                return cls(Dict = diarylist[jc])
+        print('ERROR: id = {} is not found in diarylist @SearchId'.format(id))
+
+
+
+
+
+    # def setInfo_formToDict(self,iform):
+    #     if self.Initiate:
+    #         for field in iform:
+    #             if field.id == 'csrf_token': continue
+    #             self.Dict[field.id] = field.data
+    #         self.SaveToDB()
+
 
     # Dict is the item saved in DB directly
     def __init__(self,Dict = None):
         if Dict is not None:
             self.Dict = Dict
+            self.form = DiaryForm()
             self.initiated = True
             return
         else:
             print('ERROR: no valid input in ini@DiaryObj')
+
+
+    def SetFormbyDict(self):
+        if self.initiated:
+            for field in self.form:
+                if field.id == 'csrf_token': continue
+                val = self.Dict.get(field.id,None)
+                if val is not None:
+                    field.default = val
+            self.form.process()
+
+
+
+
 
 
 
@@ -57,15 +221,50 @@ class DiaryObj():
 @permission.ValidForLogged
 def Diary(pageindex):
 
-    # N_page = 50
-    DiaryObjList = DiaryObj.GetDiaryObjList()
-    return flask.render_template('Diary.html/Diary.html.j2',app = app,DiaryObjList=DiaryObjList)
+    N_per_page = 30
+    indexrange = 4
+
+
+    sp = SeperatePage(List = DiaryObj.GetDiaryObjList(),N_per_page = N_per_page)
+    DiaryObjList = sp.GetListSegmentByIndex(pageindex)
+    pagelist = sp.GetMutipleIndexList(index=pageindex,Range=indexrange)
+    # return a list [ index , [  "<" , ">" , integer ] ]
+
+    return flask.render_template('Diary.html/Diary.html.j2',
+    app = app,
+    DiaryObjList=DiaryObjList,
+    pagelist=pagelist)
 
 
 
 @app.route('/Diary_createNew',methods=['get'])
 @permission.ValidForLogged
 def Diary_createNew():
+    Diary = DiaryObj.GetNew()
+    Diary.RerangeListbyTime()
+    Diary.SetFormbyDict()
+    return flask.render_template('Diary.html/Diary_Edite.html.j2',app = app,Diary=Diary)
 
 
-    return flask.render_template('Diary.html/Diary_CreateNew.html.j2',app = app)
+
+@app.route('/Diary_EditeDiary/<int:id>',methods=['get'])
+@permission.ValidForLogged
+def Diary_EditeDiary(id):
+    Diary = DiaryObj.SearchId(id)
+    Diary.SetFormbyDict()
+    return flask.render_template('Diary.html/Diary_Edite.html.j2',app = app,Diary=Diary)
+
+
+
+
+
+@app.route('/Diary_submit',methods=['POST'])
+@permission.ValidForLogged
+def Diary_submit():
+    form = DiaryForm()
+    if form.validate_on_submit():
+        DiaryObj.SetEditeFormToContainer(form)
+        DiaryObj.SaveToDB()
+        return 'sucess'
+    else:
+        return 'error'

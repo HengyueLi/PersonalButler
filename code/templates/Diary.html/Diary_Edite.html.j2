@@ -1,0 +1,106 @@
+{% extends "navbar.html.j2" %}
+{% import 'objects.html.j2' as OBJs %}
+
+
+{% block head %}
+<script>
+    window.onload = function activate_navbar_PasswordButton() {
+        document.getElementById("nabbar_button_diary").classList.add("active")
+    }
+</script>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% block main %}
+<div class='container'>
+  {{OBJs.DateTimebock(uid='EditeDiary',IsShowTime = True )}}
+  <form id='DiaryEditeForm'  >
+    {{Diary.form.hidden_tag()}}
+    {{Diary.form.time(style="display:none")}}
+    {{Diary.form.id(style="display:none")}}
+
+    <div class="form-group">
+        <label >Title</label>
+        <!-- <input type="text" class="form-control" id="title" placeholder="title"> -->
+        {{Diary.form.title(class="form-control",placeholder="title")}}
+    </div>
+
+    <div class="form-group">
+      <label class="col-form-label">Context:</label>
+      <!-- <textarea class="form-control" style="height:70%" id="record"></textarea> -->
+      {{Diary.form.record(class="form-control",style="height:70%")}}
+    </div>
+
+  </form>
+</div>
+
+
+
+
+
+
+
+<script>
+
+  // load time
+  document.addEventListener('readystatechange', event => {
+    if (event.target.readyState === "complete") {
+      SetFormTimeBySecEditeDiary( document.getElementById('time').value )
+    }
+  });
+
+  // check title change set
+  document.getElementById("title").addEventListener("change", Diary_submit );
+  // check text change
+  document.getElementById("record").addEventListener("change", Diary_submit );
+
+
+
+
+ // submit
+ function Diary_submit() {
+   // get time
+   document.getElementById('time').value = getInputTimeSecsEditeDiary()
+
+   var form = $('#DiaryEditeForm');
+   var Url = "{{url_for('Diary_submit')}}"
+
+   $.ajax({
+          type: "POST",
+          url: Url,
+          data: form.serialize(), // serializes the form's elements.
+          success: function(data) {
+            // alert(data);
+          },
+          error: function(xhr, statusText, err) {
+            swal("error"+xhr.status);
+          }
+        });
+
+
+ }
+</script>
+
+
+
+
+
+{% endblock %}

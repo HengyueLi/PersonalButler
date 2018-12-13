@@ -14,23 +14,77 @@
 
 
 
-{% macro DairyShowItem(uid,buttontxt,parentid,text,IsShow = False ) %}
+{% macro DairyShowItem(obj,parentid,IsShow = False ) %}
+<!-- uid,buttontxt,parentid,text,IsShow = False -->
+
+
+{% set uid  = obj.Dict['id']      %}
+{% set text = obj.Dict['record']  %}
+{% set ctime = moment(app.config['fun_FUM'].gettimeobj(obj.Dict['time'])).calendar() %}
+
+<!-- {% set ExpendTxt = ctime + text[:50] %} -->
+
+
+
 <div class="card">
-  <div class="card-header" id="headingOne{{uid}}">
-    <h5 class="mb-0">
+  <div class="card-header" id="headingOne{{uid}}" style="display:flex">
+    <h5 class="mb-0" style="overflow: hidden;display: inline-flex;">
+
+      <a class="btn btn-primary" href="{{url_for('Diary_EditeDiary',id=uid)}}" role="button">
+        <i class="far fa-edit"></i>
+      </a>
       {% if IsShow %}{% set TF = 'true' %}{% else %}{% set TF ='false' %}{% endif %}
-      <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne{{uid}}" aria-expanded="{{TF}}" aria-controls="collapseOne{{uid}}">
-        {{buttontxt}}
+      <button  class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne{{uid}}" aria-expanded="{{TF}}" aria-controls="collapseOne{{uid}}">
+        <div>
+           <span>{{ctime}}__</span>
+           <span style="color:green">{{obj.Dict['title']}}__</span>
+           <span style="color:black">{{text}}</span>
+        </div>
       </button>
+
     </h5>
   </div>
-                        <!-- "collapse show"    -->
+
   {% if IsShow %}{% set show = 'show' %}{% else %}{% set show ='' %}{% endif %}
-  <div id="collapseOne{{uid}}" class="collapse {{show}}" aria-labelledby="headingOne{{uid}}" data-parent="#{{parentid}}">
-    <div class="card-body"><pre>{{text}}</pre></div>
+  <div id="collapseOne{{uid}}" class="collapse {{show}}" aria-labelledby="headingOne{{uid}}" data-parent="#accordionExample">
+    <div class="card-body">
+      <pre style="white-space:pre-wrap;">{{text}}</pre>
+    </div>
   </div>
 </div>
+
+
+
+
 {%- endmacro %}
+
+
+
+
+{% block UpLeftPagination %}
+<nav aria-label="Page navigation example" >
+  <ul class="pagination ">
+    {% set currentindex = pagelist[0] %}
+    {% set showinglist  = pagelist[1] %}
+    {% for index in showinglist %}
+      {% if index == "<" %}
+        {% set goindex = showinglist[1]  - 1 %}
+      {% elif index == ">" %}
+        {% set goindex = showinglist[-2] + 1 %}
+      {% else %}
+        {% set goindex = index            %}
+      {% endif %}
+      {% if currentindex == index %}
+        {% set active   = 'active'   %}
+      {% else %}
+        {% set active   = ''   %}
+      {% endif %}
+      <li class="page-item  {{active}}"><a class="page-link " href="{{url_for('Diary',pageindex=goindex)}}">{{index}}</a></li>
+    {% endfor %}
+  </ul>
+</nav>
+{% endblock %}
+
 
 
 
@@ -40,7 +94,6 @@
 <a href="{{url_for('Diary_createNew')}}" role="button" aria-pressed="true" class="btn btn-lg btn-success">
   <i class="far fa-calendar-plus"></i>
 </a>
-
 {% endblock %}
 
 
@@ -55,41 +108,17 @@
 
 {% block main %}
 <div class='container'>
-  <div class="accordion" id="FrameaccordionExample">
+<div class="accordion " id="accordionExample">
 
-    {{DairyShowItem(
-      uid       = 1,
-      buttontxt = '2018',
-      parentid  ='FrameaccordionExample',
-      text      = 'fjdnf',
-      IsShow    = False,
-      )}}
+  {% for dairyobj in DiaryObjList %}
+    {{DairyShowItem(obj = dairyobj,IsShow = False,)}}
+  {% endfor %}
+
+</div>
 
 
 
 
-
-  </div>
-
-
-
-
-
-  <!-- <nav class='row' style="mb-5" aria-label="...">
-    <ul class="pagination">
-      <li class="page-item disabled">
-        <a class="page-link" href="#" tabindex="-1">Previous</a>
-      </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item active">
-        <a class="page-link" href="#">2 <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
-      <li class="page-item">
-        <a class="page-link" href="#">Next</a>
-      </li>
-    </ul>
-  </nav> -->
 
 
 
