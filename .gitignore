@@ -14,3 +14,5 @@ code/static/bootstrap/css/\.DS_Store
 code/profile\.dat
 
 ENV_fedora/
+
+\.DS_Store

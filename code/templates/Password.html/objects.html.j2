@@ -5,10 +5,12 @@
 
 {% macro SearchPasswordIterm() %}
 <div class="input-group">
-  <div class="form-inline my-2 my-lg-0">
-    <input id = 'searchpassword_inputtxt' class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-    <button onclick="SubmitSearchPassword()" class="btn btn-outline-success my-2 my-sm-0" >Search</button>
-  </div>
+  <form class="form-inline my-2 my-lg-0" method='get' onsubmit="return SubmitSearchPassword();">
+    <!-- <div class="form-inline my-2 my-lg-0"> -->
+      <input id = 'searchpassword_inputtxt' class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+      <button onclick="SubmitSearchPassword()" class="btn btn-outline-success my-2 my-sm-0" >Search</button>
+    <!-- </div> -->
+  </form>
 </div>
 
 <script>
@@ -29,6 +31,7 @@
       type: 'GET'
     });
 
+    return false
 }
 
 </script>

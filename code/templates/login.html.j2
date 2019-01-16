@@ -79,15 +79,16 @@
   </head>
 
   <body class="text-center">
-    <form id ="loginform" class="form-signin" method='post' action="{{url_for('loginCheckpassword')}}">
+    <form id ="loginform" class="form-signin" method='post' action="{{url_for('loginCheckpassword')}}" onsubmit="return checklogin();">
       {{ lgiform.hidden_tag() }}
       <!-- <img class="mb-4" src="https://getbootstrap.com/docs/4.1/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72"> -->
       <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
 
       <label for="inputPassword" class="sr-only">Password</label>
       {{lgiform.password( id="inputPassword" ,class="form-control" ,placeholder="Password" )}}
-      <!-- <input type="password" id="inputPassword" class="form-control" placeholder="Password" required> -->
-      <button onclick="return checklogin();" class="btn btn-lg btn-primary btn-block" type="button">Sign in</button>
+
+      <button  class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+
     </form>
 
 

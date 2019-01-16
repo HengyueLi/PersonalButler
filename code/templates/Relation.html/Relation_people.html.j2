@@ -81,10 +81,10 @@
     <div class="container">
         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
             <div class="input-group">
-                <div class="form-inline my-2 my-lg-0">
+                <form class="form-inline my-2 my-lg-0" onsubmit="return SubmitSearchPeople();">
                     <input id = 'searchpeople_inputtxt' class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                    <button onclick="SubmitSearchPeople()" class="btn btn-outline-success my-2 my-sm-0">Search</button>
-                </div>
+                    <button type='submit' class="btn btn-outline-success my-2 my-sm-0">Search</button>
+                </form>
                 <button data-toggle="modal" data-target="#CreateNewRelation" type="button" class="btn btn-secondary"><i class="fas fa-user-plus"></i></button>
             </div>
         </div>
@@ -113,6 +113,7 @@
       type: 'GET'
     });
 
+    return false
 }
 
 </script>
