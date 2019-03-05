@@ -1,6 +1,7 @@
 
 from main import app,permission
 import flask
+import pypinyin
 
 
 
@@ -53,7 +54,9 @@ class ObjItem():
         r = []
         for classkey in Allclass:
             for itemkey in Allclass[classkey]:
-                if txt in itemkey:
+                # consider pinyin 
+                pinyinIncluded = "".join(pypinyin.lazy_pinyin(itemkey))+itemkey
+                if txt in pinyinIncluded:
                     r.append([  classkey,  itemkey  ])
         return r
 

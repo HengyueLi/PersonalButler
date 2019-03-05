@@ -1,6 +1,7 @@
 
 from main import app,permission
 import flask,datetime
+import pypinyin
 
 from flask_wtf import FlaskForm
 from wtforms import StringField,FloatField,IntegerField,TextField,validators,SelectField
@@ -121,7 +122,9 @@ class People():
         List = cls.getPeoplelist()
         r = []
         for id in List:
-            if txt in List[id]['name']:
+            Name = List[id]['name']
+            NamePinyinIncluded = "".join(pypinyin.lazy_pinyin(Name))+Name
+            if txt in NamePinyinIncluded:
                 r.append([List[id]['name'],List[id]['id']])
         return r
 
