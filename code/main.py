@@ -6,11 +6,11 @@ import sys,os
 
 Code_path     = os.path.dirname(os.path.abspath(__file__))
 Project_path  = os.path.dirname(Code_path)
-PagesPath     = os.path.join(Code_path, "Pages")
+# PagesPath     = os.path.join(Code_path, "Pages")
 serverside    = os.path.join(Code_path, "server")
 datafile      = os.path.join(os.getcwd(), "profile.dat")
 
-sys.path.insert(0, PagesPath )
+# sys.path.insert(0, PagesPath )
 sys.path.insert(0, serverside)
 
 
