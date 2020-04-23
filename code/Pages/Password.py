@@ -54,9 +54,9 @@ class ObjItem():
         r = []
         for classkey in Allclass:
             for itemkey in Allclass[classkey]:
-                # consider pinyin 
+                # consider pinyin
                 pinyinIncluded = "".join(pypinyin.lazy_pinyin(itemkey))+itemkey
-                if txt in pinyinIncluded:
+                if txt.lower() in pinyinIncluded.lower():
                     r.append([  classkey,  itemkey  ])
         return r
 
