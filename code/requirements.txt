@@ -1,14 +1,12 @@
 click==7.1.1
 Flask==1.1.2
 Flask-Markdown==0.3
-Flask-Moment==0.9.0
 Flask-WTF==0.14.3
 itsdangerous==1.1.0
 Jinja2==2.11.2
 Markdown==3.2.1
 MarkupSafe==1.1.1
-pycryptodome==3.9.7
-pydictfileency==2020.4.25.1905
+pydictfileency==2020.7.30.2129
 pypinyin==0.37.0
 Werkzeug==1.0.1
 WTForms==2.2.1

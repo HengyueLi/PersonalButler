@@ -25,11 +25,12 @@ app.config['PROFILE_DATA_FILE'] = datafile
 app.config['DATA_CONTAINER'] = {}
 #-------------------------------------------------------------------------------------------
 #      time js
-from flask_moment import Moment
-moment = Moment(app)
+# from flask_moment import Moment
+# from static_moment.flask_moment import Moment
+# moment = Moment(app)
 #-------------------------------------------------------------------------------------------
 #      markdown support
-import flaskext.markdown 
+import flaskext.markdown
 flaskext.markdown.Markdown(app)
 
 
