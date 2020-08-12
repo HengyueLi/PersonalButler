@@ -33,7 +33,7 @@
 <!-- <script src="{{url_for('static',filename='js/dobpicker.js')}}"></script> -->
 
 <style>
-  
+
     .Namelist_frame_fixedbox {
         /* height: 70%; */
         /* height: 600px; */
@@ -42,8 +42,8 @@
         width: 20%;
         /* border:groove; */
     }
-    
-    
+
+
 
 
 
@@ -318,7 +318,10 @@
             <div class="card-body">
                 {% for record in people.Dict['Recdl'] %}
                 <!-- >>>>>>>>>>>>>>>>>> one record >>>>>>>>>>>>>>>>>>>>>> -->
-                {% set ctime = moment( app.config['fun_FUM'].gettimeobj( record['time'] )  ).calendar() %}
+                {#% set ctime = moment( app.config['fun_FUM'].gettimeobj( record['time'] )  ).calendar() %#}
+                {% set dt = app.config['fun_FUM'].gettimeobj( record['time'] ) %}
+                {% set ctime = app.config['fun_FUM'].getDatetimeStrWithZone( dt ) %}
+
                 <div class="card border-primary mb-3" style="width: 100%;">
                     <div class="card-header"> {{ctime}}
                       <button onclick="EditeRecoredButton({{record['time']}},{{record['itemid']}})" type="button" class="btn btn-light btn-lg">
