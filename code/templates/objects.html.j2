@@ -2,7 +2,7 @@
 
 {#
 will return  function:
-                       SetFormTimeBySec{{uid}}(sec)  set form time by seconds 
+                       SetFormTimeBySec{{uid}}(sec)  set form time by seconds
                        RefreshTime{{uid}}()          to renew time form
                        getInputTimeSecs{{uid}}       return the seconds of the input
  #}
@@ -168,6 +168,15 @@ function ClickToClipboard{{uid}}() {
   var copyText = document.getElementById("txt{{uid}}");
   copyText.select();
   document.execCommand("copy");
+  swal({
+          title: 'Copied!',
+          icon: 'success',
+          timer: 1000,
+          buttons: false,
+      })
+      .then(() => {
+          dispatch(redirect('/'));
+      })
 }
 
 </script>
