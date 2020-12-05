@@ -6,18 +6,23 @@ import sys,os
 
 Code_path     = os.path.dirname(os.path.abspath(__file__))
 Project_path  = os.path.dirname(Code_path)
-# PagesPath     = os.path.join(Code_path, "Pages")
 serverside    = os.path.join(Code_path, "server")
 datafile      = os.path.join(os.getcwd(), "profile.dat")
 
-# sys.path.insert(0, PagesPath )
-sys.path.insert(0, serverside)
+
 
 
 #-------------------------------------------------------------------------------------------
 #     create app
 import flask
-app = flask.Flask(__name__)
+if getattr(sys, 'frozen', False):
+    template_folder = os.path.join(sys._MEIPASS,'templates')
+    static_folder = os.path.join(sys._MEIPASS,'static')
+    app = flask.Flask(__name__, template_folder = template_folder,static_folder = static_folder)
+else:
+    app = flask.Flask(__name__)
+
+#-------------------------------------------------------------------------------------------
 app.config['SECRET_KEY'] = os.urandom(24)
 
 
@@ -37,9 +42,8 @@ flaskext.markdown.Markdown(app)
 
 
 
-
-from permission import permission
-from FUM        import FUM
+from server.permission import permission
+from server.FUM        import FUM
 app.config['fun_FUM'] = FUM
 #-------------------------------------------------------------------------------------------
 #  render all the pages
@@ -58,4 +62,26 @@ from Pages import *
 #--------------------------------------------------------------------------------------------
 #    Run
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=4999, debug= True )
+    host = '0.0.0.0'
+    port = 4999
+
+
+
+    print('''
+
+   ╔═════════════════════════════════════════════════════
+   ║ profile={}
+   ║┌────────────────────────────┐
+   ║   http://localhost:{}
+   ║└────────────────────────────┘
+   ╚═════════════════════════════════════════════════════
+    '''.format(datafile,port))
+
+
+    app.run(host=host, port=port, debug= True )
+
+
+
+
+    # linux
+    # webbrowser.open(url='http://0.0.0.0:4999', new=1)

@@ -3,7 +3,13 @@
 It is a complete application contains three major functions: a **password manager**, a **contact manager** and a **diary manager**. All the data is stored in an encrypted file with AES256. The application loads the data from the disk to memory directly (without any other temporary unencrypted file). In this way, all the personal information is protected. The application set-up a local web server to offer a simple GUI.
 
 ### Install
+**method 1: Download source code**  
 This is a 'python3' application. Download the code folder and install the requirement-file: `pip install -r requirments.txt`. Or optionally, one can use an isolated environment.
+
+**method 2: run bin file**  
+Just download bin file and run it. Run it in terminal is recommended. However, a double-click should also work.
+
+
 
 ## Usage
 

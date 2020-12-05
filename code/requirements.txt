@@ -6,6 +6,7 @@ itsdangerous==1.1.0
 Jinja2==2.11.2
 Markdown==3.2.1
 MarkupSafe==1.1.1
+pycryptodome==3.9.8
 pydictfileency==2020.7.30.2129
 pypinyin==0.37.0
 Werkzeug==1.0.1
