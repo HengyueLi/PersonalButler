@@ -1,7 +1,7 @@
 
 from main import app,permission
-from pydictfileency import PyDictFileEncy
-
+#from pydictfileency import PyDictFileEncy
+from rudeencrypt import Encryption as PyDictFileEncy
 
 import os,flask,flask_wtf
 

@@ -3,7 +3,8 @@ from main import app,permission
 
 import flask,flask_wtf
 import wtforms
-from pydictfileency import PyDictFileEncy
+#from pydictfileency import PyDictFileEncy
+from rudeencrypt import Encryption as PyDictFileEncy
 
 
 class SignupForm(flask_wtf.FlaskForm):
@@ -40,7 +41,7 @@ def CreateNewData(app,password):
     #    Diary
     container.CreateTableIfNotExist('Diary')
     diary = container.GetTable('Diary')
-    diary['list'] = []      # 
+    diary['list'] = []      #
     #-------------------------------------------------------
     container.Save()
 
