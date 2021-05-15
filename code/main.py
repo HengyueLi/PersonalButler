@@ -25,7 +25,14 @@ else:
 #-------------------------------------------------------------------------------------------
 app.config['SECRET_KEY'] = os.urandom(24)
 
+#----------------------------------------------------------------------
+# encryption API
+from rudeencrypt import Encryption as PyDictFileEncy
+#----------------------------------------------------------------------
 
+
+
+app.config['ENCRYPTION_CLASS'] = PyDictFileEncy
 app.config['PROFILE_DATA_FILE'] = datafile
 app.config['DATA_CONTAINER'] = {}
 #-------------------------------------------------------------------------------------------

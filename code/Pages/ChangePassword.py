@@ -39,4 +39,5 @@ def ChangePassword_PostForm():
             flask.flash('The confirmed password is incorrect!')
     else:
         flask.flash('Change password: faild')
+    permission.SetLogout()
     return flask.redirect( '/' )

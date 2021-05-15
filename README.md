@@ -33,6 +33,15 @@ One can add records for each relation.
 
 Simple usage.
 
+### Advanced Usage
+One can use another encryption method. Edit the file `main.py`, find the following place:
+```
+...
+from rudeencrypt import Encryption as PyDictFileEncy
+...
+```
+One can replace it with `from <whatever> import <whatever> as PyDictFileEncy` to import their own api.
+The interface must be the same as [`rudeencrypt`](https://pypi.org/project/rudeencrypt/). In other words, one need to write a new `rudeencrypt` method.  
 
 --------------------
 
@@ -54,3 +63,18 @@ pip install -r requirments.txt
 ### 使用  
 使用方法是直接运行`main.py`,然后从网页中打开`http://localhost:4999/`（可以编辑该文件调调参数）。使用完毕记得点击退出按钮安全的退出。直接杀死程序也没有问题。忘了关就不安全了。  
 剩下的过程大约自己摸索就可以了，细节请看英文说明。
+
+### 用户自定义加密方法
+如果你不放心别人用的加密方式，你可以使用你自己的方法加密。打开主文件 `main.py`,替换下面的内容:
+```
+...
+from rudeencrypt import Encryption as PyDictFileEncy
+...
+```
+为新的内容  
+```
+...
+from <whatever> import <whatever> as PyDictFileEncy
+...
+```  
+本项目使用了子项目[`rudeencrypt`](https://pypi.org/project/rudeencrypt/)。所以换句话说，你需要按照该子项目的API借口写一个你自己的版本。

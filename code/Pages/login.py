@@ -1,13 +1,13 @@
 
 from main import app,permission
-#from pydictfileency import PyDictFileEncy
-from rudeencrypt import Encryption as PyDictFileEncy
 
 import os,flask,flask_wtf
 
 
 import wtforms
 
+
+PyDictFileEncy = app.config['ENCRYPTION_CLASS']
 
 
 class LoginForm(flask_wtf.FlaskForm):

@@ -3,15 +3,13 @@ from main import app,permission
 
 import flask,flask_wtf
 import wtforms
-#from pydictfileency import PyDictFileEncy
-from rudeencrypt import Encryption as PyDictFileEncy
 
 
 class SignupForm(flask_wtf.FlaskForm):
     password = wtforms.PasswordField('Password')
 
 
-
+PyDictFileEncy = app.config['ENCRYPTION_CLASS']
 
 #---------------------------------------------------------
 #   When user create new
