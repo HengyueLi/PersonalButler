@@ -29,6 +29,9 @@ def login():
 
 
 
+
+
+
 @app.route('/loginCheckpassword',methods=['post'])
 @permission.ValidForUnLogged
 def loginCheckpassword():
@@ -41,7 +44,8 @@ def loginCheckpassword():
         container.connect()
         if container.IsConnected():
             app.config['DATA_CONTAINER'] = container
-            flask.session['logged'] = True
+            # flask.session['logged'] = True
+            permission.SetLogin()
             return flask.redirect( flask.url_for('profile') )
         else:
             return 'error'

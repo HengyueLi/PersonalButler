@@ -27,3 +27,11 @@ class permission():
             else:
                 return f(*args,**kargs)
         return decorated
+
+    @staticmethod
+    def SetLogout():
+        flask.session['logged'] = False
+
+    @staticmethod
+    def SetLogin():
+        flask.session['logged'] = True
