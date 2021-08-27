@@ -1,5 +1,5 @@
 
-import flask,datetime
+import flask,datetime,logging
 
 
 
@@ -8,7 +8,11 @@ class FUM():
 
     @staticmethod
     def gettimeobj(sec):
-        return datetime.datetime.utcfromtimestamp(sec)
+        try:
+            return datetime.datetime.utcfromtimestamp(sec)
+        except:
+            logging.error("gettimeobj@FUM@server: error with conver dt from seconds = [{}]".format(sec))
+
 
     @staticmethod
     def getDatetimeStrWithZone(dtobj):
