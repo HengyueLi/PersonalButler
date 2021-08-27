@@ -42,6 +42,10 @@ os.system(compileCMD)
 
 #----
 try:
+    os.makedirs(DIR,'bin')
+except:
+    pass
+try:
     os.remove( os.path.join(DIR,'bin',exeName)  )
 except:
     pass
