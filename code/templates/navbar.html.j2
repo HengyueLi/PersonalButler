@@ -1,9 +1,9 @@
 
 <div id="navbartop" style="display: none;">
   <!-- global variables for every page. -->
- {% set container = app.config['DATA_CONTAINER'] %}
- {% set passwordm = container.GetTable('PasswordManager') %}
- {% set passwdcls = passwordm.get('class',None) %}
+ {% set encObj = app.config['DATA_CONTAINER'] %}
+ {#% set passwordm = container.GetTable('PasswordManager') %#}
+ {% set passwdcls = app.config['fun_FUM'].Password_getClassName(encObj) %}
 </div>
 
 

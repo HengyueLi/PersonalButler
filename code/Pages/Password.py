@@ -32,20 +32,42 @@ class KeyValPairForm(FlaskForm):
 # ObjItem(Class,Item)
 class ObjItem():
 
+    # @classmethod
+    # def InserNew(cls,Class,Item,Timesec):
+    #     container = app.config['DATA_CONTAINER']
+    #     pclass    = container.GetTable('PasswordManager')['class'].get(Class,None)
+    #     if pclass is None:
+    #         return [ False , 'Class name {} does not exist!'.format(Class)  ]
+    #     if Item  in pclass:
+    #         return [ False , 'Item name {} exist! Use a different name'.format(Item)  ]
+    #     pclass[Item] = {
+    #     'createtime': Timesec ,
+    #     'actions'   : [ ]     ,
+    #     'data'      : {}      ,
+    #     }
+    #     return [True,   cls(Class = Class,Item = Item)   ]
     @classmethod
     def InserNew(cls,Class,Item,Timesec):
-        container = app.config['DATA_CONTAINER']
-        pclass    = container.GetTable('PasswordManager')['class'].get(Class,None)
-        if pclass is None:
+        encObj = app.config['DATA_CONTAINER']
+        # pclass    = container.GetTable('PasswordManager')['class'].get(Class,None)
+        pclass = app.config['fun_FUM'].Password_getClassName(encObj)
+        pName = 'PasswordManager'
+        tName = 'CLASS_'+Class
+        if Class not in pclass:
             return [ False , 'Class name {} does not exist!'.format(Class)  ]
-        if Item  in pclass:
+        q = encObj.getSelectByKey(partitionName=pName,tableName=tName,val=Item)
+        if q is not None:
             return [ False , 'Item name {} exist! Use a different name'.format(Item)  ]
-        pclass[Item] = {
+        data =   {
         'createtime': Timesec ,
         'actions'   : [ ]     ,
         'data'      : {}      ,
         }
+        encObj.InsertDictIntoTable(partitionName=pName,tableName=tName,data=data,key = Item)
         return [True,   cls(Class = Class,Item = Item)   ]
+
+
+
 
     @staticmethod
     def SearchPass(txt):
@@ -63,21 +85,31 @@ class ObjItem():
 
 
 
+    # def __init__(self,Class,Item):
+    #     self.container = app.config['DATA_CONTAINER']
+    #     self.allclass  = self.container.GetTable('PasswordManager')['class']
+    #     self.classdict = self.allclass[Class]
+    #     self.itemname  = Item
+    #     self.item      = self.classdict.get(Item,None)
+    #     if self.item is None:
+    #         self.IsInitiated = False
+    #     self.data = self.item['data']
+    #     self.actRec = self.item['actions']
+    #     self.IsInitiated = True
     def __init__(self,Class,Item):
-        self.container = app.config['DATA_CONTAINER']
-        self.allclass  = self.container.GetTable('PasswordManager')['class']
-        self.classdict = self.allclass[Class]
+        pName = 'PasswordManager'
+        tName = "CLASS_" + Class
+        self.encObj = app.config['DATA_CONTAINER']
         self.itemname  = Item
-        self.item      = self.classdict.get(Item,None)
+        self.item = self.encObj.getSelectByKey(partitionName=pName,tableName=tName,val = self.itemname)
         if self.item is None:
             self.IsInitiated = False
         self.data = self.item['data']
         self.actRec = self.item['actions']
         self.IsInitiated = True
 
-
     def Save(self):
-        self.container.Save()
+        self.encObj.Save()
 
     def RecordAction(self,actype,actime,actkey,actval):
         # actype = [ 'create' , 'change' , 'delete' ]
@@ -128,7 +160,8 @@ class ObjItem():
     def GetPopularKeyList(self):
         #   length of List1
         LenL1 = 5
-        kwcounter = self.container.GetTable('PasswordManager')['keywords']
+        # kwcounter = self.container.GetTable('PasswordManager')['keywords']
+        kwcounter = self.encObj.getAllItemsInTable(partitionName='PasswordManager',tableName='keywords')
         # keys = list(kwcounter.keys())
         L = [kv[0] for kv in sorted(kwcounter.items(), key=lambda x: x[1])]
         L = list(reversed(L))
@@ -218,24 +251,42 @@ def PasswordActionRecord(Class,item):
 
 
 
-
 @app.route('/PasswordAddClass',methods=['post'])
 @permission.ValidForLogged
 def PasswordAddClass():
     form = AddClassForm()
     if form.validate_on_submit():
         newcls = form.Class.data
-        container = app.config['DATA_CONTAINER']
-        pm = container.GetTable('PasswordManager')
-        pcls = pm.get('class')
+        encObj = app.config['DATA_CONTAINER']
+        # tbs = encObj.getAllTableNames('PasswordManager')
+        # pcls = [ tb.replace('CLASS_','') for tb in tbs if 'CLASS_' in tb]
+        pcls = app.config['fun_FUM'].Password_getClassName(encObj)
         if newcls in pcls:
             flask.flash("class name '{}' exists!".format(newcls))
             return flask.redirect(  flask.session.get('SavingUrl','/')   )
-        pcls[newcls] = {}
-        container.Save()
+        encObj.CreateTableIfNotExist('PasswordManager','CLASS_'+newcls)
+        encObj.Save()
         return flask.redirect( flask.url_for('PasswordClass' , Class = newcls)  )
     flask.flash("error! not valid submit")
     return flask.redirect(  flask.session.get('SavingUrl','/')   )
+
+# @app.route('/PasswordAddClass',methods=['post'])
+# @permission.ValidForLogged
+# def PasswordAddClass():
+#     form = AddClassForm()
+#     if form.validate_on_submit():
+#         newcls = form.Class.data
+#         container = app.config['DATA_CONTAINER']
+#         pm = container.GetTable('PasswordManager')
+#         pcls = pm.get('class')
+#         if newcls in pcls:
+#             flask.flash("class name '{}' exists!".format(newcls))
+#             return flask.redirect(  flask.session.get('SavingUrl','/')   )
+#         pcls[newcls] = {}
+#         container.Save()
+#         return flask.redirect( flask.url_for('PasswordClass' , Class = newcls)  )
+#     flask.flash("error! not valid submit")
+#     return flask.redirect(  flask.session.get('SavingUrl','/')   )
 
 
 
@@ -272,8 +323,9 @@ def PasswordAddKeyvalPair(Class,item):
         r = obj.InserKeyvalPair(key=key,val=val,time=time)
         if r[0]:
             #---count key frequency
-            container = app.config['DATA_CONTAINER']
-            kwcounter = container.GetTable('PasswordManager')['keywords']
+            encObj = app.config['DATA_CONTAINER']
+            # kwcounter = container.GetTable('PasswordManager')['keywords']
+            kwcounter = encObj.getAllItemsInTable(partitionName='PasswordManager',tableName='keywords')
             if key in kwcounter:
                 kwcounter[key] += 1
             else:

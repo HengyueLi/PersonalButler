@@ -25,7 +25,7 @@ def exportData():
 def importData():
     if flask.request.files:
         importedFile = flask.request.files["file"]
-        app.config['DATA_CONTAINER'].setByDecryptedData(   json.loads(importedFile.read().decode())   )
+        app.config['DATA_CONTAINER'].setByDecryptedData_Dict(   json.loads(importedFile.read().decode())   )
         app.config['DATA_CONTAINER'].Save()
         permission.SetLogout()
         return flask.redirect(flask.url_for('index'))

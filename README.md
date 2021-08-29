@@ -77,4 +77,4 @@ from rudeencrypt import Encryption as PyDictFileEncy
 from <whatever> import <whatever> as PyDictFileEncy
 ...
 ```  
-本项目使用了子项目[`rudeencrypt`](https://pypi.org/project/rudeencrypt/)。所以换句话说，你需要按照该子项目的API借口写一个你自己的版本。
+本项目使用了子项目[`rudeencrypt`](https://pypi.org/project/rudeencrypt/)。所以换句话说，你需要按照该子项目的API接口写一个你自己的版本。

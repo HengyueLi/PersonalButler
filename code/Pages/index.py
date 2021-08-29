@@ -11,7 +11,7 @@ import flask,os
 
 @app.route('/')
 def index():
-    if os.path.exists(app.config['PROFILE_DATA_FILE']):
-        return flask.redirect( flask.url_for('login')  )
-    else:
+    if app.config['ENCRYPTION_CLASS'].IsUserNew():
         return flask.redirect( flask.url_for('SignUp')  )
+    else:
+        return flask.redirect( flask.url_for('login')  )

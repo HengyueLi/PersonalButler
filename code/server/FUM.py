@@ -19,3 +19,9 @@ class FUM():
         import time ,datetime
         dtAtCurrentZone =  dtobj - datetime.timedelta(seconds=time.timezone)
         return dtAtCurrentZone.strftime('%Y-%m-%d')
+
+    @staticmethod
+    def Password_getClassName(encObj):
+        tbs = encObj.getAllTableNames('PasswordManager')
+        pcls = [ tb.replace('CLASS_','') for tb in tbs if 'CLASS_' in tb]
+        return pcls
