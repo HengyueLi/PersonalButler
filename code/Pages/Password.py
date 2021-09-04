@@ -101,6 +101,7 @@ class ObjItem():
         tName = "CLASS_" + Class
         self.encObj = app.config['DATA_CONTAINER']
         self.itemname  = Item
+        self.className = Class
         self.item = self.encObj.getSelectByKey(partitionName=pName,tableName=tName,val = self.itemname)
         if self.item is None:
             self.IsInitiated = False
@@ -144,11 +145,16 @@ class ObjItem():
         return [True,0]
 
     def Reclassify(self,newclass):
-        DesCls = self.allclass[newclass]
+        pName = 'PasswordManager'
+        tName_newcls = "CLASS_"+newclass
+        tName_curcls = "CLASS_"+self.className
+        DesCls = self.encObj.getAllItemsInTable(partitionName=pName,tableName=tName_newcls)
         check = DesCls.get(self.itemname,None)
         if check is None:
-            DesCls[self.itemname] = dict(self.item)
-            del self.classdict[self.itemname]
+            # DesCls[self.itemname] = dict(self.item)
+            self.encObj.InsertDictIntoTable(partitionName=pName,tableName=tName_newcls,data=dict(self.item),key=self.itemname)
+            # del self.classdict[self.itemname]
+            self.encObj.DeleteItemFromTable(partitionName=pName,tableName=tName_curcls,key=self.itemname)
             return [True,0]
         else:
             return [ False,"item '{}' already exists in the destination class '{}' ".format(self.itemname,newclass)  ]

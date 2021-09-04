@@ -25,3 +25,8 @@ class FUM():
         tbs = encObj.getAllTableNames('PasswordManager')
         pcls = [ tb.replace('CLASS_','') for tb in tbs if 'CLASS_' in tb]
         return pcls
+
+
+    def Password_getAllItems(encObj,clasName) -> dict:
+        tbs = encObj.getAllTableNames('PasswordManager')
+        return encObj.getAllItemsInTable(partitionName='PasswordManager',tableName="CLASS_"+clasName)

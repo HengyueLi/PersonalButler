@@ -77,13 +77,17 @@ class EncryptionAPI():
         tb = self.container.GetTable(partitionName)[tableName]
         for key in Dict:
             tb[key] = Dict[key]
-            
+
 
 
 
     def InsertDictIntoTable(self,partitionName,tableName,data,key):
         #--------------  code below  ---------------
         self.container.GetTable(partitionName)[tableName][key] = data
+
+    def DeleteItemFromTable(self,partitionName,tableName,key):
+        #--------------  code below  ---------------
+        del self.container.GetTable(partitionName)[tableName][key]
 
     def getDecryptedData_Dict(self) -> dict:
         # conver all data into python dict
@@ -94,6 +98,8 @@ class EncryptionAPI():
         # restore data from a python dict
         #--------------  code below  ---------------
         self.container.setByDecryptedData( Dict )
+
+
 
     #
     # def InsertDataIntoTable(self,tableName,key,pyDict):
