@@ -62,6 +62,10 @@ def importData():
             tb = 'CLASS_' + cls
             encObj.CreateTableIfNotExist(partitionName='PasswordManager',tableName=tb)
             encObj.setAllItemsInTable(partitionName='PasswordManager',tableName=tb,Dict=clsDict[cls])
+        #-------- Relation  --------------
+        encObj.CreatePartitionIfNotExist('Relations')
+        encObj.CreateTableIfNotExist(partitionName='Relations',tableName='people')
+        encObj.setAllItemsInTable(partitionName='Relations',tableName='people',Dict=Data['Relations'])
         #-------- Diary  --------------
         encObj.CreatePartitionIfNotExist('Diary')
         encObj.CreateTableIfNotExist(partitionName='Diary',tableName='list')
