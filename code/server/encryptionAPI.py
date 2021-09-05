@@ -28,6 +28,12 @@ class EncryptionAPI():
     def ResetPassword(self,Password):
         self.container.SetPassword(Password)
 
+    def getPassword(self) -> str:
+        # return the current password
+        # current password is stored somewhere in db
+        #--------------  code below  ---------------
+        return str(self.container._Encryption__Dict['FILE_DB_CONFIG']['password'])
+
     def connect(self):
         # connect to the data source
         #--------------  code below  ---------------
@@ -91,16 +97,22 @@ class EncryptionAPI():
         del self.container.GetTable(partitionName)[tableName][key]
 
 
+    #
+    # def getDecryptedData_Dict(self) -> dict:
+    #     # conver all data into python dict
+    #     #--------------  code below  ---------------
+    #     return self.container.getDecryptedData_Dict()
+    #
+    # def setByDecryptedData_Dict(self,Dict):
+    #     # restore data from a python dict
+    #     #--------------  code below  ---------------
+    #     self.container.setByDecryptedData( Dict )
 
-    def getDecryptedData_Dict(self) -> dict:
-        # conver all data into python dict
-        #--------------  code below  ---------------
-        return self.container.getDecryptedData_Dict()
 
-    def setByDecryptedData_Dict(self,Dict):
-        # restore data from a python dict
-        #--------------  code below  ---------------
-        self.container.setByDecryptedData( Dict )
+
+
+
+
 
 
 
