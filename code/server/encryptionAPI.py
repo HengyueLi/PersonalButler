@@ -101,3 +101,38 @@ class EncryptionAPI():
         # restore data from a python dict
         #--------------  code below  ---------------
         self.container.setByDecryptedData( Dict )
+
+
+
+
+
+
+
+
+#
+# # 因为butler中的存储结构变化了，以下脚本可以将旧版本dat转换成新版本
+# import json
+# from rudeencrypt import Encryption
+# import getpass
+#
+#
+# dataFilePath = 'profile.dat'
+#
+# password = getpass. getpass()
+# enDB = Encryption(dataFilePath,password)
+# enDB.connect()
+# r = enDB.getDecryptedData_Dict()
+# d = r['FILE_DB_TABLE']['PasswordManager']['class']
+# newPass = {}
+# for key in d:
+#     tn = "CLASS_" + key
+#     newPass[tn] = dict(  d[key]   )
+# newPass['keywords'] = dict(r['FILE_DB_TABLE']['PasswordManager']['keywords'])
+# r['FILE_DB_TABLE']['PasswordManager'] = newPass
+# newDiary = {}
+# newDiraryList = {item['id']:item for item in r['FILE_DB_TABLE']['Diary']['list']}
+# r['FILE_DB_TABLE']['Diary']['list'] = newDiraryList
+# enDB.path = dataFilePath + ".newVersion"
+# enDB.setByDecryptedData(r)
+# enDB.Save()
+# print('finished')
