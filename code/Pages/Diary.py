@@ -103,6 +103,7 @@ class DiaryObj():
     def SaveToDB():
         container = app.config['DATA_CONTAINER']
         container.Save()
+        # self.encObj.Save()
 
 
     def SetEditeFormToContainer(form):
@@ -110,63 +111,88 @@ class DiaryObj():
         for field in form:
             if field.id == 'csrf_token': continue
             Dict[field.id] = field.data
-        container = app.config['DATA_CONTAINER']
-        diarylist = container.GetTable('Diary')['list']
-        for jc in range(len(diarylist)):
-            if diarylist[jc]['id'] == Dict['id']:
-                diarylist[jc] = Dict
-                return
-        print('ERROR: @SetEditeFormToContainer, id={} is not fond in diarylist'.format(['id']))
+        encObj = app.config['DATA_CONTAINER']
+        encObj.InsertDictIntoTable(partitionName='Diary',tableName='list',data=Dict,key=Dict['id'])
+        encObj.Save()
+        # container = app.config['DATA_CONTAINER']
+        # diarylist = container.GetTable('Diary')['list']
+        # for jc in range(len(diarylist)):
+        #     if diarylist[jc]['id'] == Dict['id']:
+        #         diarylist[jc] = Dict
+        #         return
+        # print('ERROR: @SetEditeFormToContainer, id={} is not fond in diarylist'.format(['id']))
 
-    @staticmethod
-    def RerangeListbyTime():
-        container = app.config['DATA_CONTAINER']
-        Diary     = container.GetTable('Diary')
-        diarylist = Diary['list']
+    @classmethod
+    def RerangeListbyTime(cls):
+        encObj = app.config['DATA_CONTAINER']
+        diarylist = cls.getDiaryDict()
         td = {}
         for item in diarylist:
             td[item['time']] = item
         times = list(td.keys())
         times.sort(reverse=True,key=float)
-        Diary['list'] = [ td[time] for time in times ]
+        diarylist = { td[time]['id']:td[time] for time in times }
+        encObj.setAllItemsInTable(partitionName='Diary',tableName='list',Dict=diarylist)
+
+    # @staticmethod
+    # def RerangeListbyTime():
+    #     container = app.config['DATA_CONTAINER']
+    #     Diary     = container.GetTable('Diary')
+    #     diarylist = Diary['list']
+    #     td = {}
+    #     for item in diarylist:
+    #         td[item['time']] = item
+    #     times = list(td.keys())
+    #     times.sort(reverse=True,key=float)
+    #     Diary['list'] = [ td[time] for time in times ]
 
 
 
 
 
 
-
+    @staticmethod
+    def getDiaryDict():
+        encObj = app.config['DATA_CONTAINER']
+        diaryDict = encObj.getAllItemsInTable(partitionName='Diary',tableName='list')
+        diarylist = [diaryDict[k] for k in diaryDict]
+        return diarylist
 
 
 
     @classmethod
     def GetDiaryObjList( cls ):
-        # return [   ]
-        container = app.config['DATA_CONTAINER']
-        diarylist = container.GetTable('Diary')['list']
+        diarylist = cls.getDiaryDict()
         return [ cls(Dict=d) for d in diarylist ]
 
 
     @classmethod
     def GetNew(cls):
-        container = app.config['DATA_CONTAINER']
-        diarylist = container.GetTable('Diary')['list']
         Dict = {
                 'id':GetSecId() ,
                 'time':datetime.datetime.now().timestamp(), # can not use utcnow! Timezone lost ! why? I do not know!
                 'title':'',
                 'record':'',}
-        diarylist.append(Dict)
+        encObj = app.config['DATA_CONTAINER']
+        encObj.InsertDictIntoTable(partitionName='Diary',tableName='list',data=Dict,key=Dict['id'])
+        encObj.Save()
         return cls(Dict=Dict)
 
     @classmethod
     def SearchId(cls,id):
-        container = app.config['DATA_CONTAINER']
-        diarylist = container.GetTable('Diary')['list']
-        for jc in range(len(diarylist)):
-            if diarylist[jc]['id'] == id:
-                return cls(Dict = diarylist[jc])
-        print('ERROR: id = {} is not found in diarylist @SearchId'.format(id))
+        encObj = app.config['DATA_CONTAINER']
+        r = encObj.getSelectByKey(partitionName='Diary',tableName='list',val = id)
+        if r is None:
+            print('ERROR: id = {} is not found in diarylist @SearchId'.format(id))
+        else:
+            return cls(Dict = r)
+
+        # container = app.config['DATA_CONTAINER']
+        # diarylist = container.GetTable('Diary')['list']
+        # for jc in range(len(diarylist)):
+        #     if diarylist[jc]['id'] == id:
+        #         return cls(Dict = diarylist[jc])
+        # print('ERROR: id = {} is not found in diarylist @SearchId'.format(id))
 
 
 
@@ -183,6 +209,7 @@ class DiaryObj():
     # Dict is the item saved in DB directly
     def __init__(self,Dict = None):
         if Dict is not None:
+            self.encObj = app.config['DATA_CONTAINER']
             self.Dict = Dict
             self.form = DiaryForm()
             self.initiated = True

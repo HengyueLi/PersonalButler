@@ -18,42 +18,42 @@
 <!-- uid,buttontxt,parentid,text,IsShow = False -->
 
 
-{% set uid  = obj.Dict['id']      %}
-{% set text = obj.Dict['record']  %}
+  {% set uid  = obj.Dict['id']      %}
+  {% set text = obj.Dict['record']  %}
 
-{% set dt = app.config['fun_FUM'].gettimeobj(obj.Dict['time']) %}
-{% set ctime = app.config['fun_FUM'].getDatetimeStrWithZone( dt ) %}
+  {% set dt = app.config['fun_FUM'].gettimeobj(obj.Dict['time']) %}
+  {% set ctime = app.config['fun_FUM'].getDatetimeStrWithZone( dt ) %}
 
-<!-- {% set ExpendTxt = ctime + text[:50] %} -->
+  <!-- {% set ExpendTxt = ctime + text[:50] %} -->
 
 
 
-<div class="card">
-  <div class="card-header" id="headingOne{{uid}}" style="display:flex">
-    <h5 class="mb-0" style="overflow: hidden;display: inline-flex;">
+  <div class="card">
+    <div class="card-header" id="headingOne{{uid}}" style="display:flex">
+      <h5 class="mb-0" style="overflow: hidden;display: inline-flex;">
 
-      <a class="btn btn-primary" href="{{url_for('Diary_EditeDiary',id=uid)}}" role="button">
-        <i class="far fa-edit"></i>
-      </a>
-      {% if IsShow %}{% set TF = 'true' %}{% else %}{% set TF ='false' %}{% endif %}
-      <button  class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne{{uid}}" aria-expanded="{{TF}}" aria-controls="collapseOne{{uid}}">
-        <div>
-           <span>{{ctime}}__</span>
-           <span style="color:green">{{obj.Dict['title']}}__</span>
-           <span style="color:black">{{text}}</span>
-        </div>
-      </button>
+        <a class="btn btn-primary" href="{{url_for('Diary_EditeDiary',id=uid)}}" role="button">
+          <i class="far fa-edit"></i>
+        </a>
+        {% if IsShow %}{% set TF = 'true' %}{% else %}{% set TF ='false' %}{% endif %}
+        <button  class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne{{uid}}" aria-expanded="{{TF}}" aria-controls="collapseOne{{uid}}">
+          <div>
+             <span>{{ctime}}__</span>
+             <span style="color:green">{{obj.Dict['title']}}__</span>
+             <span style="color:black">{{text}}</span>
+          </div>
+        </button>
 
-    </h5>
-  </div>
+      </h5>
+    </div>
 
-  {% if IsShow %}{% set show = 'show' %}{% else %}{% set show ='' %}{% endif %}
-  <div id="collapseOne{{uid}}" class="collapse {{show}}" aria-labelledby="headingOne{{uid}}" data-parent="#accordionExample">
-    <div class="card-body">
-      <pre style="white-space:pre-wrap;">{{text}}</pre>
+    {% if IsShow %}{% set show = 'show' %}{% else %}{% set show ='' %}{% endif %}
+    <div id="collapseOne{{uid}}" class="collapse {{show}}" aria-labelledby="headingOne{{uid}}" data-parent="#accordionExample">
+      <div class="card-body">
+        <pre style="white-space:pre-wrap;">{{text}}</pre>
+      </div>
     </div>
   </div>
-</div>
 
 
 

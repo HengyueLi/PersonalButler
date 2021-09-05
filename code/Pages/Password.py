@@ -64,6 +64,7 @@ class ObjItem():
         'data'      : {}      ,
         }
         encObj.InsertDictIntoTable(partitionName=pName,tableName=tName,data=data,key = Item)
+        encObj.Save()
         return [True,   cls(Class = Class,Item = Item)   ]
 
 
@@ -71,15 +72,17 @@ class ObjItem():
 
     @staticmethod
     def SearchPass(txt):
-        container = app.config['DATA_CONTAINER']
-        Allclass  = container.GetTable('PasswordManager')['class']
+        encObj = app.config['DATA_CONTAINER']
+        # Allclass  = container.GetTable('PasswordManager')['class']
+        tbNames = encObj.getAllTableNames(partitionName='PasswordManager')
         r = []
-        for classkey in Allclass:
-            for itemkey in Allclass[classkey]:
+        for tbName in tbNames:
+            items = encObj.getAllItemsInTable(partitionName='PasswordManager',tableName=tbName)
+            for itemkey in items:
                 # consider pinyin
                 pinyinIncluded = "".join(pypinyin.lazy_pinyin(itemkey))+itemkey
                 if txt.lower() in pinyinIncluded.lower():
-                    r.append([  classkey,  itemkey  ])
+                    r.append([  tbName[6:],  itemkey  ])
         return r
 
 
@@ -155,6 +158,7 @@ class ObjItem():
             self.encObj.InsertDictIntoTable(partitionName=pName,tableName=tName_newcls,data=dict(self.item),key=self.itemname)
             # del self.classdict[self.itemname]
             self.encObj.DeleteItemFromTable(partitionName=pName,tableName=tName_curcls,key=self.itemname)
+            encObj.Save()
             return [True,0]
         else:
             return [ False,"item '{}' already exists in the destination class '{}' ".format(self.itemname,newclass)  ]

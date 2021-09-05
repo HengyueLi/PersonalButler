@@ -25,6 +25,9 @@ class EncryptionAPI():
         dataFile = self.getDataSource()
         self.container = Encryption(dataFile,Password)
 
+    def ResetPassword(self,Password):
+        self.container.SetPassword(Password)
+
     def connect(self):
         # connect to the data source
         #--------------  code below  ---------------
@@ -78,9 +81,6 @@ class EncryptionAPI():
         for key in Dict:
             tb[key] = Dict[key]
 
-
-
-
     def InsertDictIntoTable(self,partitionName,tableName,data,key):
         # if key exist, update the item
         #--------------  code below  ---------------
@@ -90,18 +90,14 @@ class EncryptionAPI():
         #--------------  code below  ---------------
         del self.container.GetTable(partitionName)[tableName][key]
 
+
+
     def getDecryptedData_Dict(self) -> dict:
         # conver all data into python dict
         #--------------  code below  ---------------
         return self.container.getDecryptedData_Dict()
 
-    def setByDecryptedData_Dict(Dict):
+    def setByDecryptedData_Dict(self,Dict):
         # restore data from a python dict
         #--------------  code below  ---------------
         self.container.setByDecryptedData( Dict )
-
-
-
-    #
-    # def InsertDataIntoTable(self,tableName,key,pyDict):
-    #     # your method to store a python-dict into table with an item key

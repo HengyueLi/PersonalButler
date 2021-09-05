@@ -77,6 +77,7 @@ class People():
 
     def SaveToDB(self):
         self.encObj.InsertDictIntoTable(partitionName='Relations',tableName='people',data=self.Dict,key=self.id)
+        self.encObj.Save()
         # container = app.config['DATA_CONTAINER']
         # container.Save()
 
@@ -117,6 +118,7 @@ class People():
         }
         encObj = app.config['DATA_CONTAINER']
         encObj.InsertDictIntoTable(partitionName='Relations',tableName='people',data=Dict,key=uid)
+        encObj.Save()
         return cls(id = uid)
 
 
