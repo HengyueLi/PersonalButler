@@ -107,9 +107,7 @@ class EncryptionAPI():
 
 
 
-
-
-#
+#----------------------------------------------------------------
 # # 因为butler中的存储结构变化了，以下脚本可以将旧版本dat转换成新版本
 # import json
 # from rudeencrypt import Encryption
@@ -130,7 +128,10 @@ class EncryptionAPI():
 # newPass['keywords'] = dict(r['FILE_DB_TABLE']['PasswordManager']['keywords'])
 # r['FILE_DB_TABLE']['PasswordManager'] = newPass
 # newDiary = {}
-# newDiraryList = {item['id']:item for item in r['FILE_DB_TABLE']['Diary']['list']}
+# def f(item):
+#     item['id'] = str(item['id'])
+#     return item
+# newDiraryList = {str(item['id']):f(item) for item in r['FILE_DB_TABLE']['Diary']['list']}
 # r['FILE_DB_TABLE']['Diary']['list'] = newDiraryList
 # enDB.path = dataFilePath + ".newVersion"
 # enDB.setByDecryptedData(r)

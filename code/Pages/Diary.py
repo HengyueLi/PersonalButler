@@ -9,7 +9,7 @@ from wtforms.widgets import TextArea
 
 
 def GetSecId():
-    return int(datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S"))
+    return str(int(datetime.datetime.utcnow().strftime("%Y%m%d%H%M%S")))
 
 
 
@@ -88,7 +88,7 @@ class SeperatePage():
 
 
 class DiaryForm(FlaskForm):
-    id     = IntegerField()
+    id     = StringField()
     time   = FloatField()
     title  = StringField()
     record = StringField('description', widget=TextArea())
@@ -181,7 +181,7 @@ class DiaryObj():
     @classmethod
     def SearchId(cls,id):
         encObj = app.config['DATA_CONTAINER']
-        r = encObj.getSelectByKey(partitionName='Diary',tableName='list',val = id)
+        r = encObj.getSelectByKey(partitionName='Diary',tableName='list',val = str(id))
         if r is None:
             print('ERROR: id = {} is not found in diarylist @SearchId'.format(id))
         else:
@@ -215,14 +215,14 @@ class DiaryObj():
             self.initiated = True
             return
         else:
-            print('ERROR: no valid input in ini@DiaryObj')
+            print('ERROR: no valid input in init@DiaryObj')
 
 
     def SetFormbyDict(self):
         if self.initiated:
             for field in self.form:
                 if field.id == 'csrf_token': continue
-                val = self.Dict.get(field.id,None)
+                val = self.Dict.get(str(field.id),None)
                 if val is not None:
                     field.default = val
             self.form.process()
@@ -274,7 +274,7 @@ def Diary_createNew():
 
 
 
-@app.route('/Diary_EditeDiary/<int:id>',methods=['get'])
+@app.route('/Diary_EditeDiary/<string:id>',methods=['get'])
 @permission.ValidForLogged
 def Diary_EditeDiary(id):
     Diary = DiaryObj.SearchId(id)
