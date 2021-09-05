@@ -70,7 +70,7 @@ class EncryptionAPI():
     def getAllItemsInTable(self,partitionName,tableName) -> dict:
         #--------------  code below  ---------------
         r = self.container.GetTable(partitionName)[tableName]
-        return r
+        return dict(r)
 
     def setAllItemsInTable(self,partitionName,tableName,Dict):
         #--------------  code below  ---------------
@@ -82,6 +82,7 @@ class EncryptionAPI():
 
 
     def InsertDictIntoTable(self,partitionName,tableName,data,key):
+        # if key exist, update the item
         #--------------  code below  ---------------
         self.container.GetTable(partitionName)[tableName][key] = data
 

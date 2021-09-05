@@ -75,30 +75,54 @@ class People():
 
 # >>>>>>>>>>>>>> class method >>>>>>>>>>>>>>
 
-    @staticmethod
-    def SaveToDB():
-        container = app.config['DATA_CONTAINER']
-        container.Save()
+    def SaveToDB(self):
+        self.encObj.InsertDictIntoTable(partitionName='Relations',tableName='people',data=self.Dict,key=self.id)
+        # container = app.config['DATA_CONTAINER']
+        # container.Save()
 
+    # @staticmethod
+    # def getPeoplelist():
+    #     # return {  'id':dict   }
+    #     container = app.config['DATA_CONTAINER']
+    #     people    = container.GetTable('Relations')['people']
+    #     return people
     @staticmethod
     def getPeoplelist():
         # return {  'id':dict   }
-        container = app.config['DATA_CONTAINER']
-        people    = container.GetTable('Relations')['people']
-        return people
+        encObj = app.config['DATA_CONTAINER']
+        return encObj.getAllItemsInTable(partitionName='Relations',tableName='people')
 
+
+    # @classmethod
+    # def CreateNew(cls,name):
+    #     uid = str(GetSecId())
+    #     plist = cls.getPeoplelist()
+    #     plist[uid] = {
+    #        'name'  : name ,
+    #        'id'    : uid  ,
+    #        'Workl' : []   ,        # element:  {'itemid':int,  'when':str, 'where':str, 'what':str  }
+    #        'Educl' : []   ,
+    #        'Recdl' : []   ,        # element:  {'time':float,  'text':str,  'itemid':int  }
+    #     }
+    #     return cls(id = uid)
     @classmethod
     def CreateNew(cls,name):
         uid = str(GetSecId())
-        plist = cls.getPeoplelist()
-        plist[uid] = {
+        Dict = {
            'name'  : name ,
            'id'    : uid  ,
            'Workl' : []   ,        # element:  {'itemid':int,  'when':str, 'where':str, 'what':str  }
            'Educl' : []   ,
            'Recdl' : []   ,        # element:  {'time':float,  'text':str,  'itemid':int  }
         }
+        encObj = app.config['DATA_CONTAINER']
+        encObj.InsertDictIntoTable(partitionName='Relations',tableName='people',data=Dict,key=uid)
         return cls(id = uid)
+
+
+
+
+
 
     @staticmethod
     def calculateAge(born):
@@ -136,16 +160,16 @@ class People():
 
 
 
-
 # <<<<<<<<<<<<<< class method <<<<<<<<<<<<<<<<<
     def __init__(self,id=None):
         if id is None:
             self.Initiate = False
         else:
+            self.encObj = app.config['DATA_CONTAINER']
             self.Initiate = True
             self.id       = id
-            self.Dict     = self.getPeoplelist()[id]
-            self.born     = self.GetBornByDict()
+            self.Dict     = self.encObj.getSelectByKey(partitionName='Relations',tableName='people',val=str(id))
+            self.born     = self.GetBornByDict(self.Dict)
             self.age      = self.calculateAge(self.born)
             self.zodiac   = self.getZodiac(self.born)
         #-----------------------
@@ -156,10 +180,11 @@ class People():
         self.recform = RecordForm()
 
 
-    def GetBornByDict(self):
-        year  = self.Dict.get('Birthday_Year',0)
-        month = self.Dict.get('Birthday_Month',0)
-        day   = self.Dict.get('Birthday_Day',0)
+    @staticmethod
+    def GetBornByDict(Dict):
+        year  = Dict.get('Birthday_Year',0)
+        month = Dict.get('Birthday_Month',0)
+        day   = Dict.get('Birthday_Day',0)
         if year == 0 or month == 0 or day == 0 :
             return None
         else:
