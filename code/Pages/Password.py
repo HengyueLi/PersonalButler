@@ -158,7 +158,7 @@ class ObjItem():
             self.encObj.InsertDictIntoTable(partitionName=pName,tableName=tName_newcls,data=dict(self.item),key=self.itemname)
             # del self.classdict[self.itemname]
             self.encObj.DeleteItemFromTable(partitionName=pName,tableName=tName_curcls,key=self.itemname)
-            encObj.Save()
+            self.encObj.Save()
             return [True,0]
         else:
             return [ False,"item '{}' already exists in the destination class '{}' ".format(self.itemname,newclass)  ]
