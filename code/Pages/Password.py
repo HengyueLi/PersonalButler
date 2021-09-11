@@ -77,12 +77,13 @@ class ObjItem():
         tbNames = encObj.getAllTableNames(partitionName='PasswordManager')
         r = []
         for tbName in tbNames:
-            items = encObj.getAllItemsInTable(partitionName='PasswordManager',tableName=tbName)
-            for itemkey in items:
-                # consider pinyin
-                pinyinIncluded = "".join(pypinyin.lazy_pinyin(itemkey))+itemkey
-                if txt.lower() in pinyinIncluded.lower():
-                    r.append([  tbName[6:],  itemkey  ])
+            if 'CLASS_' == tbName[0:6]:
+                items = encObj.getAllItemsInTable(partitionName='PasswordManager',tableName=tbName)
+                for itemkey in items:
+                    # consider pinyin
+                    pinyinIncluded = "".join(pypinyin.lazy_pinyin(itemkey))+itemkey
+                    if txt.lower() in pinyinIncluded.lower():
+                        r.append([  tbName[6:],  itemkey  ])
         return r
 
 
