@@ -104,6 +104,15 @@ class EncryptionAPI():
         else:
             return  [ db[key1] ]
 
+    def SelectDistinctKey1(self,tableName) -> list:
+        # use key1 (primary key) as filter
+        # equally in sql: select DISTINCT key1 from tableName
+        #--------------  code below  ---------------
+        tbDict = self.container.GetTable(tableName)
+        db = tbDict['data']
+        return list( db.keys() )
+
+
     def getAllItems(self,tableName) -> list:
         # return list of data, data is dictionary
         #--------------  code below  ---------------

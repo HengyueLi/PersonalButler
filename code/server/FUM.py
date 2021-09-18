@@ -22,8 +22,9 @@ class FUM():
 
     @staticmethod
     def Password_getClassName(encObj):
-        classList = encObj.getAllItems('PasswordClassNameList')
-        return [ i['k'] for i in classList ]
+        # classList = encObj.getAllItems('PasswordClassNameList')
+        return encObj.SelectDistinctKey1('PasswordManager')
+        # return [ i['k'] for i in classList ]
 
 
     def Password_getAllItems(encObj,clasName) -> dict:
@@ -31,6 +32,13 @@ class FUM():
         items = encObj.selectItems(tableName='PasswordManager', key1=clasName)
         return {   item['itemname']:item for item in items  }
         # return encObj.getAllItemsInTable(partitionName='PasswordManager',tableName="CLASS_"+clasName)
+
+    @staticmethod
+    def Password_KeepKeyword():
+        # item name of can not be this one.
+        return "__NULL__"
+
+
 
 
     def ResetTable(encObj,tableName,DictList,key1,key2=None):

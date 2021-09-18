@@ -18,12 +18,12 @@ def exportData():
     #----------  password data  ------------
     #
     kwDirct = [ {item['k']:item['v']} for item in encObj.getAllItems(tableName='keywords') ]
-    classNames = [ d['k'] for d in encObj.getAllItems('PasswordClassNameList') ]
+    # classNames = [ d['k'] for d in encObj.getAllItems('PasswordClassNameList') ]
     # for clsN in dataDitc:
     #     l = encObj.selectItems(tableName='PasswordManager', key1=clsN, key2=None )
     #     dataDitc[clsN] = {  d['itemname']:d for d in l }
     Data['PasswordManager'] = {
-        'classNames' : classNames,
+        # 'classNames' : classNames,
         'keywords': kwDirct,
         'data': encObj.getAllItems(tableName='PasswordManager'),
     }
@@ -50,11 +50,11 @@ def importData():
         password = Data['CONFIG']['PASSWORD']
         encObj.ResetPassword(password)
         #------- PasswordManager ------
-        classNames = Data['PasswordManager']['classNames']
+        # classNames = Data['PasswordManager']['classNames']
         kwDict = Data['PasswordManager']['keywords']
         clsDict = Data['PasswordManager']['data']
         RelDict = Data['Relations']
-        app.config['fun_FUM'].ResetTable(encObj,tableName='PasswordClassNameList',DictList= [ {"k":i,"v":""}  for i in classNames] ,key1='k',key2=None)
+        # app.config['fun_FUM'].ResetTable(encObj,tableName='PasswordClassNameList',DictList= [ {"k":i,"v":""}  for i in classNames] ,key1='k',key2=None)
         app.config['fun_FUM'].ResetTable(encObj,tableName='keywords',DictList=kwDict,key1='k',key2=None)
         app.config['fun_FUM'].ResetTable(encObj,tableName='PasswordManager',DictList=clsDict,key1='class',key2='itemname')
         app.config['fun_FUM'].ResetTable(encObj,tableName='Relations',DictList=RelDict,key1='id',key2=None)

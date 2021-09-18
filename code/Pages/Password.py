@@ -78,11 +78,13 @@ class ObjItem():
     def SearchPass(txt):
         encObj = app.config['DATA_CONTAINER']
         items = encObj.getAllItems( tableName='PasswordManager')
+        keptKW = app.config['fun_FUM'].Password_KeepKeyword()
         r = []
         for item in items:
-            pinyinIncluded = "".join(pypinyin.lazy_pinyin(item['itemname']))+item['itemname']
-            if txt.lower() in pinyinIncluded.lower():
-                r.append([  item['class'],  item['itemname'] ])
+            if item['itemname'] != keptKW:
+                pinyinIncluded = "".join(pypinyin.lazy_pinyin(item['itemname']))+item['itemname']
+                if txt.lower() in pinyinIncluded.lower():
+                    r.append([  item['class'],  item['itemname'] ])
         return r
 
 
@@ -246,7 +248,7 @@ def PasswordActionRecord(Class,item):
 
 
 
-
+#
 
 @app.route('/PasswordAddClass',methods=['post'])
 @permission.ValidForLogged
@@ -256,10 +258,15 @@ def PasswordAddClass():
         newcls = form.Class.data
         encObj = app.config['DATA_CONTAINER']
         pcls = app.config['fun_FUM'].Password_getClassName(encObj)
+        keptKW = app.config['fun_FUM'].Password_KeepKeyword()
+        if newcls == keptKW:
+            flask.flash("'{}' is a kept keyword, if you must use it. Modified Password_KeepKeyword@FUM.py".format(keptKW))
+            return flask.redirect(  flask.session.get('SavingUrl','/')   )
         if newcls in pcls:
             flask.flash("class name '{}' exists!".format(newcls))
             return flask.redirect(  flask.session.get('SavingUrl','/')   )
-        encObj.InsertIntoTable('PasswordClassNameList',{"k":newcls},key1=newcls)
+        encObj.InsertIntoTable('PasswordManager',{"class":newcls,'itemname':keptKW},key1=newcls,key2=keptKW)
+        # encObj.InsertIntoTable('PasswordClassNameList',{"k":newcls},key1=newcls)
         encObj.Save()
         return flask.redirect( flask.url_for('PasswordClass' , Class = newcls)  )
     flask.flash("error! not valid submit")

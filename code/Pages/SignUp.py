@@ -55,7 +55,7 @@ def CreateNewData(app,password):
     #    PasswordManager
     encObj.CreateTableIfNotExist(tableName='PasswordManager', isSorted=True )
     #    store class name list, key1 = keyname, value = {keyname:anything}
-    encObj.CreateTableIfNotExist(tableName='PasswordClassNameList' )
+    # encObj.CreateTableIfNotExist(tableName='PasswordClassNameList' )
     #---------------------------
     # #   remember popular keywords    :   key:number
     encObj.CreateTableIfNotExist(tableName='keywords')
