@@ -53,24 +53,18 @@ def CreateNewData(app,password):
     encObj.connect()
     #=======================================================
     #    PasswordManager
-    pName = 'PasswordManager'
-    encObj.CreatePartitionIfNotExist(pName)
+    encObj.CreateTableIfNotExist(tableName='PasswordManager', isSorted=True )
+    #    store class name list, key1 = keyname, value = {keyname:anything}
+    encObj.CreateTableIfNotExist(tableName='PasswordClassNameList' )
     #---------------------------
-    #   set items into classes
-    # 原class下面的dict集合则用"CLASS_"做表的prefix来区分
-    # #---------------------------
     # #   remember popular keywords    :   key:number
-    encObj.CreateTableIfNotExist(partitionName=pName,tableName='keywords')
+    encObj.CreateTableIfNotExist(tableName='keywords')
     #=======================================================
     #    Relations
-    pName = 'Relations'
-    encObj.CreatePartitionIfNotExist(pName)
-    encObj.CreateTableIfNotExist(partitionName=pName,tableName='people')
+    encObj.CreateTableIfNotExist(tableName='Relations')
     #=======================================================
     #    Diary
-    pName = 'Diary'
-    encObj.CreatePartitionIfNotExist(pName)
-    encObj.CreateTableIfNotExist(partitionName=pName,tableName='list')  #
+    encObj.CreateTableIfNotExist(tableName='Diary')
     #-------------------------------------------------------
     encObj.Save()
 

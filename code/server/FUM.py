@@ -22,11 +22,27 @@ class FUM():
 
     @staticmethod
     def Password_getClassName(encObj):
-        tbs = encObj.getAllTableNames('PasswordManager')
-        pcls = [ tb[6:] for tb in tbs if 'CLASS_' == tb[0:6]]
-        return pcls
+        classList = encObj.getAllItems('PasswordClassNameList')
+        return [ i['k'] for i in classList ]
 
 
     def Password_getAllItems(encObj,clasName) -> dict:
-        tbs = encObj.getAllTableNames('PasswordManager')
-        return encObj.getAllItemsInTable(partitionName='PasswordManager',tableName="CLASS_"+clasName)
+        #  {  itemName:value }
+        items = encObj.selectItems(tableName='PasswordManager', key1=clasName)
+        return {   item['itemname']:item for item in items  }
+        # return encObj.getAllItemsInTable(partitionName='PasswordManager',tableName="CLASS_"+clasName)
+
+
+    def ResetTable(encObj,tableName,DictList,key1,key2=None):
+        encObj.DropTableIfExist(tableName)
+        if key2 is not None:
+            isSorted = True
+        else:
+            isSorted = False
+        encObj.CreateTableIfNotExist( tableName, isSorted )
+        if isSorted:
+            for Dict in DictList:
+                encObj.InsertIntoTable(tableName=tableName,data=Dict,key1=Dict[key1],key2=Dict[key2])
+        else:
+            for Dict in DictList:
+                encObj.InsertIntoTable(tableName=tableName,data=Dict,key1=Dict[key1])

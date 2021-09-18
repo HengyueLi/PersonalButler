@@ -50,63 +50,73 @@ class EncryptionAPI():
         #--------------  code below  ---------------
         self.container.Save()
 
-    def CreatePartitionIfNotExist(self,partitionName):
-        # Partition can store tables
-        # A partition can be a single-database
+
+    def CreateTableIfNotExist(self, tableName, isSorted=False ):
+        # if isSorted, two keys named "key1" and "key2" is used to identify one item. These like (partition-key and sort-key)
+        # if not, one key named "key1" is used to indentify one item, work as a primary-key
         #--------------  code below  ---------------
-        self.container.CreateTableIfNotExist(partitionName)
+        self.container.CreateTableIfNotExist(tableName)
+        tb = self.container.GetTable(tableName)
+        tb['isSorted'] = isSorted
+        tb['data'] = {}
 
+    def DropTableIfExist(self,tableName):
+        # delete table with all its data
+        self.container.DropTable(tableName)
 
-    def CreateTableIfNotExist(self,partitionName,tableName):
-        #--------------  code below  ---------------
-        partition = self.container.GetTable(partitionName)
-        if tableName not in partition:
-            partition[tableName] = {}
-
-    def getAllTableNames(self,partitionName) -> list:
-        # list all tables in a partition
-        #--------------  code below  ---------------
-        pt = self.container.GetTable(partitionName)
-        return list(pt.keys())
-
-    def getSelectByKey(self,partitionName,tableName,val,key=None): # return dict or none
-        # select a item in table where get(key) =  val
-        #--------------  code below  ---------------
-        r = self.container.GetTable(partitionName)[tableName].get(val,None)
-        # print(r,partitionName,tableName,val,9978)
-        return r
-
-    def getAllItemsInTable(self,partitionName,tableName) -> dict:
-        #--------------  code below  ---------------
-        r = self.container.GetTable(partitionName)[tableName]
-        return dict(r)
-
-    def setAllItemsInTable(self,partitionName,tableName,Dict):
-        #--------------  code below  ---------------
-        tb = self.container.GetTable(partitionName)[tableName]
-        for key in Dict:
-            tb[key] = Dict[key]
-
-    def InsertDictIntoTable(self,partitionName,tableName,data,key):
+    def InsertIntoTable(self,tableName,data,key1,key2=None):
         # if key exist, update the item
         #--------------  code below  ---------------
-        self.container.GetTable(partitionName)[tableName][key] = data
+        tbDict = self.container.GetTable(tableName)
+        isSorted = tbDict['isSorted']
+        db = tbDict['data']
+        if key2 is None:
+            db[key1] = data
+        else:
+            if key1 not in db:
+                db[key1] = {}
+            db[key1][key2] = data
 
-    def DeleteItemFromTable(self,partitionName,tableName,key):
+    def DeleteOneItemFromTable(self,tableName,key1,key2=None):
+        tbDict = self.container.GetTable(tableName)
+        isSorted = tbDict['isSorted']
+        db = tbDict['data']
+        if isSorted:
+            del db[key1][key2]
+        else:
+            del db[key1]
+
+
+
+    def selectItems(self,tableName, key1, key2=None ) -> list:
+        # if only input key1, it is the primarykey, return list should contain only 1 item
         #--------------  code below  ---------------
-        del self.container.GetTable(partitionName)[tableName][key]
+        tbDict = self.container.GetTable(tableName)
+        isSorted = tbDict['isSorted']
+        db = tbDict['data']
+        if isSorted:
+            if key2 is None:
+                partition = db.get(key1,{})
+                return [ partition[key2] for key2 in partition ]
+            else:
+                g = db.get(key1,{}).get(key2,None)
+                return [g] if g is not None else []
+        else:
+            return  [ db[key1] ]
 
-
-    #
-    # def getDecryptedData_Dict(self) -> dict:
-    #     # conver all data into python dict
-    #     #--------------  code below  ---------------
-    #     return self.container.getDecryptedData_Dict()
-    #
-    # def setByDecryptedData_Dict(self,Dict):
-    #     # restore data from a python dict
-    #     #--------------  code below  ---------------
-    #     self.container.setByDecryptedData( Dict )
+    def getAllItems(self,tableName) -> list:
+        # return list of data, data is dictionary
+        #--------------  code below  ---------------
+        tbDict = self.container.GetTable(tableName)
+        isSorted = tbDict['isSorted']
+        db = tbDict['data']
+        if isSorted:
+            r = []
+            for key1 in db:
+                r += [ db[key1][key2] for key2 in db[key1] ]
+            return r
+        else:
+            return [ db[k] for k in db ]
 
 
 

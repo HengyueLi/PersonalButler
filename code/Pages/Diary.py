@@ -112,7 +112,8 @@ class DiaryObj():
             if field.id == 'csrf_token': continue
             Dict[field.id] = field.data
         encObj = app.config['DATA_CONTAINER']
-        encObj.InsertDictIntoTable(partitionName='Diary',tableName='list',data=Dict,key=Dict['id'])
+        # encObj.InsertDictIntoTable(partitionName='Diary',tableName='list',data=Dict,key=Dict['id'])
+        encObj.InsertIntoTable(tableName='Diary',data=Dict,key1=Dict['id'],key2=None)
         encObj.Save()
         # container = app.config['DATA_CONTAINER']
         # diarylist = container.GetTable('Diary')['list']
@@ -131,8 +132,9 @@ class DiaryObj():
             td[item['time']] = item
         times = list(td.keys())
         times.sort(reverse=True,key=float)
-        diarylist = { td[time]['id']:td[time] for time in times }
-        encObj.setAllItemsInTable(partitionName='Diary',tableName='list',Dict=diarylist)
+        diarylist = [ td[time] for time in times ]
+        # encObj.setAllItemsInTable(partitionName='Diary',tableName='list',Dict=diarylist)
+        app.config['fun_FUM'].ResetTable(encObj,'Diary',diarylist,key1='id',key2=None)
 
     # @staticmethod
     # def RerangeListbyTime():
@@ -154,8 +156,7 @@ class DiaryObj():
     @staticmethod
     def getDiaryDict():
         encObj = app.config['DATA_CONTAINER']
-        diaryDict = encObj.getAllItemsInTable(partitionName='Diary',tableName='list')
-        diarylist = [diaryDict[k] for k in diaryDict]
+        diarylist = encObj.getAllItems(tableName='Diary')
         return diarylist
 
 
@@ -174,14 +175,16 @@ class DiaryObj():
                 'title':'',
                 'record':'',}
         encObj = app.config['DATA_CONTAINER']
-        encObj.InsertDictIntoTable(partitionName='Diary',tableName='list',data=Dict,key=Dict['id'])
+        # encObj.InsertDictIntoTable(partitionName='Diary',tableName='list',data=Dict,key=Dict['id'])
+        encObj.InsertIntoTable(tableName='Diary',data=Dict,key1=Dict['id'],key2=None)
         encObj.Save()
         return cls(Dict=Dict)
 
     @classmethod
     def SearchId(cls,id):
         encObj = app.config['DATA_CONTAINER']
-        r = encObj.getSelectByKey(partitionName='Diary',tableName='list',val = str(id))
+        # r = encObj.getSelectByKey(partitionName='Diary',tableName='list',val = str(id))
+        r = encObj.selectItems(tableName='Diary', key1=str(id), key2=None )[0]
         if r is None:
             print('ERROR: id = {} is not found in diarylist @SearchId'.format(id))
         else:

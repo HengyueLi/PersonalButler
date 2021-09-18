@@ -76,7 +76,8 @@ class People():
 # >>>>>>>>>>>>>> class method >>>>>>>>>>>>>>
 
     def SaveToDB(self):
-        self.encObj.InsertDictIntoTable(partitionName='Relations',tableName='people',data=self.Dict,key=self.id)
+        # self.encObj.InsertDictIntoTable(partitionName='Relations',tableName='people',data=self.Dict,key=self.id)
+        self.encObj.InsertIntoTable(tableName='Relations',data=self.Dict,key1=self.id,key2=None)
         self.encObj.Save()
         # container = app.config['DATA_CONTAINER']
         # container.Save()
@@ -91,7 +92,9 @@ class People():
     def getPeoplelist():
         # return {  'id':dict   }
         encObj = app.config['DATA_CONTAINER']
-        return encObj.getAllItemsInTable(partitionName='Relations',tableName='people')
+        l = encObj.getAllItems(tableName='Relations')
+        return { i['id']:i for i in l}
+        # return encObj.getAllItemsInTable(partitionName='Relations',tableName='people')
 
 
     # @classmethod
@@ -117,7 +120,8 @@ class People():
            'Recdl' : []   ,        # element:  {'time':float,  'text':str,  'itemid':int  }
         }
         encObj = app.config['DATA_CONTAINER']
-        encObj.InsertDictIntoTable(partitionName='Relations',tableName='people',data=Dict,key=uid)
+        # encObj.InsertDictIntoTable(partitionName='Relations',tableName='people',data=Dict,key=uid)
+        encObj.InsertIntoTable(tableName='Relations',data=Dict,key1=uid,key2=None)
         encObj.Save()
         return cls(id = uid)
 
@@ -170,7 +174,8 @@ class People():
             self.encObj = app.config['DATA_CONTAINER']
             self.Initiate = True
             self.id       = id
-            self.Dict     = self.encObj.getSelectByKey(partitionName='Relations',tableName='people',val=str(id))
+            # self.Dict     = self.encObj.getSelectByKey(partitionName='Relations',tableName='people',val=str(id))
+            self.Dict     = self.encObj.selectItems(tableName='Relations', key1=str(id), key2=None )[0]
             self.born     = self.GetBornByDict(self.Dict)
             self.age      = self.calculateAge(self.born)
             self.zodiac   = self.getZodiac(self.born)

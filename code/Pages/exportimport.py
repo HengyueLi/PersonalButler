@@ -17,25 +17,22 @@ def exportData():
     Data['CONFIG'] = {'PASSWORD':encObj.getPassword()}
     #----------  password data  ------------
     #
-    kwDirct = encObj.getAllItemsInTable(partitionName='PasswordManager',tableName='keywords')
-    tbNames = encObj.getAllTableNames('PasswordManager')
-    dataDitc = {}
-    for tb in tbNames:
-        if tb[0:6] == "CLASS_":
-            dataDitc[tb[6:]] = encObj.getAllItemsInTable(partitionName='PasswordManager',tableName=tb)
+    kwDirct = [ {item['k']:item['v']} for item in encObj.getAllItems(tableName='keywords') ]
+    classNames = [ d['k'] for d in encObj.getAllItems('PasswordClassNameList') ]
+    # for clsN in dataDitc:
+    #     l = encObj.selectItems(tableName='PasswordManager', key1=clsN, key2=None )
+    #     dataDitc[clsN] = {  d['itemname']:d for d in l }
     Data['PasswordManager'] = {
+        'classNames' : classNames,
         'keywords': kwDirct,
-        'class': dataDitc,
+        'data': encObj.getAllItems(tableName='PasswordManager'),
     }
     #----------  relation  ------------
-    Data['Relations'] = encObj.getAllItemsInTable(partitionName='Relations',tableName='people')
+    Data['Relations'] = encObj.getAllItems(tableName='Relations')
     #----------  diary  ------------
-    Data['Diary'] = encObj.getAllItemsInTable(partitionName='Diary',tableName='list')
+    Data['Diary'] = encObj.getAllItems(tableName='Diary')
     buffer.write(   json.dumps(Data,indent = 4)  .encode('utf-8') )
     buffer.seek(0)
-    # import pprint as pp
-    # pp.pprint(Data,indent=4)
-    # pp.pprint(app.config['DATA_CONTAINER'].container._Encryption__Dict,indent=4)
     return flask.send_file(buffer, as_attachment=True,attachment_filename='export.json')#,mimetype='text/csv')
 
 
@@ -53,23 +50,33 @@ def importData():
         password = Data['CONFIG']['PASSWORD']
         encObj.ResetPassword(password)
         #------- PasswordManager ------
+        classNames = Data['PasswordManager']['classNames']
         kwDict = Data['PasswordManager']['keywords']
-        clsDict = Data['PasswordManager']['class']
-        encObj.CreatePartitionIfNotExist('PasswordManager')
-        encObj.CreateTableIfNotExist(partitionName='PasswordManager',tableName='keywords')
-        encObj.setAllItemsInTable(partitionName='PasswordManager',tableName='keywords',Dict=kwDict)
-        for cls in clsDict:
-            tb = 'CLASS_' + cls
-            encObj.CreateTableIfNotExist(partitionName='PasswordManager',tableName=tb)
-            encObj.setAllItemsInTable(partitionName='PasswordManager',tableName=tb,Dict=clsDict[cls])
-        #-------- Relation  --------------
-        encObj.CreatePartitionIfNotExist('Relations')
-        encObj.CreateTableIfNotExist(partitionName='Relations',tableName='people')
-        encObj.setAllItemsInTable(partitionName='Relations',tableName='people',Dict=Data['Relations'])
-        #-------- Diary  --------------
-        encObj.CreatePartitionIfNotExist('Diary')
-        encObj.CreateTableIfNotExist(partitionName='Diary',tableName='list')
-        encObj.setAllItemsInTable(partitionName='Diary',tableName='list',Dict=Data['Diary'])
+        clsDict = Data['PasswordManager']['data']
+        RelDict = Data['Relations']
+        app.config['fun_FUM'].ResetTable(encObj,tableName='PasswordClassNameList',DictList= [ {"k":i,"v":""}  for i in classNames] ,key1='k',key2=None)
+        app.config['fun_FUM'].ResetTable(encObj,tableName='keywords',DictList=kwDict,key1='k',key2=None)
+        app.config['fun_FUM'].ResetTable(encObj,tableName='PasswordManager',DictList=clsDict,key1='class',key2='itemname')
+        app.config['fun_FUM'].ResetTable(encObj,tableName='Relations',DictList=RelDict,key1='id',key2=None)
+        app.config['fun_FUM'].ResetTable(encObj,tableName='Diary',DictList=Data['Diary'],key1='id',key2=None)
+
+
+        #
+        # encObj.CreatePartitionIfNotExist('PasswordManager')
+        # encObj.CreateTableIfNotExist(partitionName='PasswordManager',tableName='keywords')
+        # encObj.setAllItemsInTable(partitionName='PasswordManager',tableName='keywords',Dict=kwDict)
+        # for cls in clsDict:
+        #     tb = 'CLASS_' + cls
+        #     encObj.CreateTableIfNotExist(partitionName='PasswordManager',tableName=tb)
+        #     encObj.setAllItemsInTable(partitionName='PasswordManager',tableName=tb,Dict=clsDict[cls])
+        # #-------- Relation  --------------
+        # encObj.CreatePartitionIfNotExist('Relations')
+        # encObj.CreateTableIfNotExist(partitionName='Relations',tableName='people')
+        # encObj.setAllItemsInTable(partitionName='Relations',tableName='people',Dict=Data['Relations'])
+        # #-------- Diary  --------------
+        # encObj.CreatePartitionIfNotExist('Diary')
+        # encObj.CreateTableIfNotExist(partitionName='Diary',tableName='list')
+        # encObj.setAllItemsInTable(partitionName='Diary',tableName='list',Dict=Data['Diary'])
         #---------------------
         encObj.Save()
         #---------------------
