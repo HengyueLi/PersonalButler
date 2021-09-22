@@ -138,33 +138,72 @@ class EncryptionAPI():
 
 
 
-#----------------------------------------------------------------
-# # 因为butler中的存储结构变化了，以下脚本可以将旧版本dat转换成新版本
+
+# #----------------------------------------------------------------
+# # # 因为butler中的存储结构变化了，以下脚本可以将旧版本dat转换成新版本
 # import json
 # from rudeencrypt import Encryption
 # import getpass
+# #
+# #
 #
 #
-# dataFilePath = 'profile.dat'
+# def Old2Enc1_20210905(InputFile,OutputFile,password):
+#     enDB = Encryption(InputFile,password)
+#     enDB.connect()
+#     if not enDB.IsConnected():
+#         print('pass error')
+#         return
+#     r = enDB.getDecryptedData_Dict()
+#     d = r['FILE_DB_TABLE']['PasswordManager']['class']
+#     newPass = {}
+#     for key in d:
+#         tn = "CLASS_" + key
+#         newPass[tn] = dict(  d[key]   )
+#     newPass['keywords'] = dict(r['FILE_DB_TABLE']['PasswordManager']['keywords'])
+#     r['FILE_DB_TABLE']['PasswordManager'] = newPass
+#     newDiary = {}
+#     def f(item):
+#         item['id'] = str(item['id'])
+#         return item
+#     newDiraryList = {str(item['id']):f(item) for item in r['FILE_DB_TABLE']['Diary']['list']}
+#     r['FILE_DB_TABLE']['Diary']['list'] = newDiraryList
+#     enDB.path = OutputFile
+#     enDB.setByDecryptedData(r)
+#     enDB.Save()
+#     print('finished')
+#
+#
+# def Enc20210905_to_20210922(input1,output1,password):
+#     enDB = Encryption(input1,password)
+#     enDB.connect()
+#     dict_new = dict(enDB._Encryption__Dict)
+#     d_pm = dict_new['FILE_DB_TABLE']['PasswordManager']
+#     dict_new['FILE_DB_TABLE']['keywords']= {'data': dict(d_pm['keywords']), 'isSorted': False}
+#     for k in dict_new['FILE_DB_TABLE']['keywords']['data']:
+#         dict_new['FILE_DB_TABLE']['keywords']['data'][k] = {'k':k,'v':dict_new['FILE_DB_TABLE']['keywords']['data'][k]}
+#     r = {}
+#     for CLS in d_pm:
+#         if CLS != 'keywords':
+#             cls = CLS[6:]
+#             r[cls] = dict(d_pm[CLS])
+#             r[cls]['__NULL__'] = {'class': cls, 'itemname':'__NULL__'}
+#             for key in d_pm[CLS]:
+#                 r[cls][key]['class'] = cls
+#                 r[cls][key]['itemname'] = key
+#     dict_new['FILE_DB_TABLE']['PasswordManager'] = {'isSorted':True,'data':r}
+#     dict_new['FILE_DB_TABLE']['Relations'] = {'isSorted':False,'data':dict_new['FILE_DB_TABLE']['Relations']['people']}
+#     dict_new['FILE_DB_TABLE']['Diary'] = {'isSorted':False,'data':dict_new['FILE_DB_TABLE']['Diary']['list']}
+#     enDB._Encryption__Dict = dict_new
+#     enDB.path = output1
+#     enDB.Save()
+#
+#
+#
+# fileInput = 'profile.dat.beforeENCapi_20210905'
+# outputFile = 'profile.dat.beforeENCapi_20210905_out'
+#
 #
 # password = getpass. getpass()
-# enDB = Encryption(dataFilePath,password)
-# enDB.connect()
-# r = enDB.getDecryptedData_Dict()
-# d = r['FILE_DB_TABLE']['PasswordManager']['class']
-# newPass = {}
-# for key in d:
-#     tn = "CLASS_" + key
-#     newPass[tn] = dict(  d[key]   )
-# newPass['keywords'] = dict(r['FILE_DB_TABLE']['PasswordManager']['keywords'])
-# r['FILE_DB_TABLE']['PasswordManager'] = newPass
-# newDiary = {}
-# def f(item):
-#     item['id'] = str(item['id'])
-#     return item
-# newDiraryList = {str(item['id']):f(item) for item in r['FILE_DB_TABLE']['Diary']['list']}
-# r['FILE_DB_TABLE']['Diary']['list'] = newDiraryList
-# enDB.path = dataFilePath + ".newVersion"
-# enDB.setByDecryptedData(r)
-# enDB.Save()
-# print('finished')
+# Old2Enc1_20210905(fileInput,outputFile,password)
+# Enc20210905_to_20210922(outputFile,outputFile,password)
