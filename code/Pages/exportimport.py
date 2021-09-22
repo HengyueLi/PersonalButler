@@ -18,12 +18,7 @@ def exportData():
     #----------  password data  ------------
     #
     kwDirct = [ {item['k']:item['v']} for item in encObj.getAllItems(tableName='keywords') ]
-    # classNames = [ d['k'] for d in encObj.getAllItems('PasswordClassNameList') ]
-    # for clsN in dataDitc:
-    #     l = encObj.selectItems(tableName='PasswordManager', key1=clsN, key2=None )
-    #     dataDitc[clsN] = {  d['itemname']:d for d in l }
     Data['PasswordManager'] = {
-        # 'classNames' : classNames,
         'keywords': kwDirct,
         'data': encObj.getAllItems(tableName='PasswordManager'),
     }
@@ -50,33 +45,13 @@ def importData():
         password = Data['CONFIG']['PASSWORD']
         encObj.ResetPassword(password)
         #------- PasswordManager ------
-        # classNames = Data['PasswordManager']['classNames']
-        kwDict = Data['PasswordManager']['keywords']
+        kwDict = [ {'k':list(d.keys())[0],'v':list(d.values())[0]} for d in Data['PasswordManager']['keywords'] ]
         clsDict = Data['PasswordManager']['data']
         RelDict = Data['Relations']
-        # app.config['fun_FUM'].ResetTable(encObj,tableName='PasswordClassNameList',DictList= [ {"k":i,"v":""}  for i in classNames] ,key1='k',key2=None)
         app.config['fun_FUM'].ResetTable(encObj,tableName='keywords',DictList=kwDict,key1='k',key2=None)
         app.config['fun_FUM'].ResetTable(encObj,tableName='PasswordManager',DictList=clsDict,key1='class',key2='itemname')
         app.config['fun_FUM'].ResetTable(encObj,tableName='Relations',DictList=RelDict,key1='id',key2=None)
         app.config['fun_FUM'].ResetTable(encObj,tableName='Diary',DictList=Data['Diary'],key1='id',key2=None)
-
-
-        #
-        # encObj.CreatePartitionIfNotExist('PasswordManager')
-        # encObj.CreateTableIfNotExist(partitionName='PasswordManager',tableName='keywords')
-        # encObj.setAllItemsInTable(partitionName='PasswordManager',tableName='keywords',Dict=kwDict)
-        # for cls in clsDict:
-        #     tb = 'CLASS_' + cls
-        #     encObj.CreateTableIfNotExist(partitionName='PasswordManager',tableName=tb)
-        #     encObj.setAllItemsInTable(partitionName='PasswordManager',tableName=tb,Dict=clsDict[cls])
-        # #-------- Relation  --------------
-        # encObj.CreatePartitionIfNotExist('Relations')
-        # encObj.CreateTableIfNotExist(partitionName='Relations',tableName='people')
-        # encObj.setAllItemsInTable(partitionName='Relations',tableName='people',Dict=Data['Relations'])
-        # #-------- Diary  --------------
-        # encObj.CreatePartitionIfNotExist('Diary')
-        # encObj.CreateTableIfNotExist(partitionName='Diary',tableName='list')
-        # encObj.setAllItemsInTable(partitionName='Diary',tableName='list',Dict=Data['Diary'])
         #---------------------
         encObj.Save()
         #---------------------

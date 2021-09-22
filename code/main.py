@@ -7,8 +7,6 @@ import sys,os
 Code_path     = os.path.dirname(os.path.abspath(__file__))
 Project_path  = os.path.dirname(Code_path)
 serverside    = os.path.join(Code_path, "server")
-# datafile      = os.path.join(os.getcwd(), "profile.dat")
-
 
 
 
@@ -25,22 +23,16 @@ else:
 #-------------------------------------------------------------------------------------------
 app.config['SECRET_KEY'] = os.urandom(24)
 
-#----------------------------------------------------------------------
-# encryption API
-# from rudeencrypt import Encryption as PyDictFileEncy
-from server.encryptionAPI import EncryptionAPI
+#------------------  encryption API -------------------------------------------------
+from DataAPI.encryptionAPI import EncryptionAPI
+# from DataAPI.encryptionAPI_sqlcipher import EncryptionAPI
+
 #----------------------------------------------------------------------
 
 
 
 app.config['ENCRYPTION_CLASS'] = EncryptionAPI
-# app.config['ENCRYPTION_DATA']  = EncryptionAPI.getDataSource()
 app.config['DATA_CONTAINER'] = {}
-#-------------------------------------------------------------------------------------------
-#      time js
-# from flask_moment import Moment
-# from static_moment.flask_moment import Moment
-# moment = Moment(app)
 #-------------------------------------------------------------------------------------------
 #      markdown support
 import flaskext.markdown
@@ -81,9 +73,3 @@ if __name__ == '__main__':
    ╚═════════════════════════════════════════════════════
     '''.format(str( EncryptionAPI.getDataSource()  ),port))
     app.run(host=host, port=port, debug= True )
-
-
-
-
-    # linux
-    # webbrowser.open(url='http://0.0.0.0:4999', new=1)

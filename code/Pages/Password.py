@@ -104,6 +104,7 @@ class ObjItem():
         self.IsInitiated = True
 
     def Save(self):
+        self.encObj.InsertIntoTable(tableName='PasswordManager',data=self.item,key1=self.className,key2=self.itemname)
         self.encObj.Save()
 
     def RecordAction(self,actype,actime,actkey,actval):
@@ -336,6 +337,7 @@ def PasswordAddKeyvalPair(Class,item):
                 kwcounter[key]  = 1
             for k in kwcounter:
                 encObj.InsertIntoTable(tableName='keywords',data={'k':k,'v':kwcounter[k]},key1=k,key2=None)
+                # encObj.Save()
             obj.Save()
             return flask.redirect( flask.url_for('PasswordItem' , Class = Class , item = item )  )
         else:
