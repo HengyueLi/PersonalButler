@@ -33,11 +33,11 @@ def ChangePassword_PostForm():
         confirm  = form.confirm.data
         if password == confirm:
             container = app.config['DATA_CONTAINER']
-            container.SetPassword(password)
+            container.ResetPassword(password)
             container.Save()
+            permission.SetLogout()
         else:
             flask.flash('The confirmed password is incorrect!')
     else:
         flask.flash('Change password: faild')
-    permission.SetLogout()
     return flask.redirect( '/' )

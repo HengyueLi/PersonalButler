@@ -11,39 +11,62 @@ class SignupForm(flask_wtf.FlaskForm):
 
 PyDictFileEncy = app.config['ENCRYPTION_CLASS']
 
+# #---------------------------------------------------------
+# #   When user create new
+# def CreateNewData(app,password):
+#     flask.session['logged'] = True
+#     #-----------------------------------------
+#     file = app.config['PROFILE_DATA_FILE']
+#     container = PyDictFileEncy(file,password)
+#     app.config['DATA_CONTAINER'] = container
+#     container.connect()
+#     #=======================================================
+#     #    PasswordManager
+#     container.CreateTableIfNotExist('PasswordManager')
+#     PassMan = container.GetTable('PasswordManager')
+#     #---------------------------
+#     #   set items into classes
+#     PassMan['class'] = {}
+#     #---------------------------
+#     #   remember popular keywords    :   key:number
+#     PassMan['keywords'] = {}
+#     #=======================================================
+#     #    Relations
+#     container.CreateTableIfNotExist('Relations')
+#     relations = container.GetTable('Relations')
+#     relations['people'] = {}
+#     #=======================================================
+#     #    Diary
+#     container.CreateTableIfNotExist('Diary')
+#     diary = container.GetTable('Diary')
+#     diary['list'] = []      #
+#     #-------------------------------------------------------
+#     container.Save()
+
 #---------------------------------------------------------
 #   When user create new
 def CreateNewData(app,password):
     flask.session['logged'] = True
     #-----------------------------------------
-    file = app.config['PROFILE_DATA_FILE']
-    container = PyDictFileEncy(file,password)
-    app.config['DATA_CONTAINER'] = container
-    container.connect()
+    encObj = PyDictFileEncy(password) #container = encObj
+    app.config['DATA_CONTAINER'] = encObj
+    encObj.connect()
     #=======================================================
     #    PasswordManager
-    container.CreateTableIfNotExist('PasswordManager')
-    PassMan = container.GetTable('PasswordManager')
+    encObj.CreateTableIfNotExist(tableName='PasswordManager', isSorted=True )
+    #    store class name list, key1 = keyname, value = {keyname:anything}
+    # encObj.CreateTableIfNotExist(tableName='PasswordClassNameList' )
     #---------------------------
-    #   set items into classes
-    PassMan['class'] = {}
-    #---------------------------
-    #   remember popular keywords    :   key:number
-    PassMan['keywords'] = {}
+    # #   remember popular keywords    :   key:number
+    encObj.CreateTableIfNotExist(tableName='keywords')
     #=======================================================
     #    Relations
-    container.CreateTableIfNotExist('Relations')
-    relations = container.GetTable('Relations')
-    relations['people'] = {}
+    encObj.CreateTableIfNotExist(tableName='Relations')
     #=======================================================
     #    Diary
-    container.CreateTableIfNotExist('Diary')
-    diary = container.GetTable('Diary')
-    diary['list'] = []      #
+    encObj.CreateTableIfNotExist(tableName='Diary')
     #-------------------------------------------------------
-    container.Save()
-
-
+    encObj.Save()
 
 
 

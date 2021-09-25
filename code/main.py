@@ -7,8 +7,6 @@ import sys,os
 Code_path     = os.path.dirname(os.path.abspath(__file__))
 Project_path  = os.path.dirname(Code_path)
 serverside    = os.path.join(Code_path, "server")
-datafile      = os.path.join(os.getcwd(), "profile.dat")
-
 
 
 
@@ -25,21 +23,16 @@ else:
 #-------------------------------------------------------------------------------------------
 app.config['SECRET_KEY'] = os.urandom(24)
 
+#------------------  encryption API -------------------------------------------------
+from DataAPI.encryptionAPI import EncryptionAPI
+# from DataAPI.encryptionAPI_sqlcipher import EncryptionAPI
+
 #----------------------------------------------------------------------
-# encryption API
-from rudeencrypt import Encryption as PyDictFileEncy
-#----------------------------------------------------------------------
 
 
 
-app.config['ENCRYPTION_CLASS'] = PyDictFileEncy
-app.config['PROFILE_DATA_FILE'] = datafile
+app.config['ENCRYPTION_CLASS'] = EncryptionAPI
 app.config['DATA_CONTAINER'] = {}
-#-------------------------------------------------------------------------------------------
-#      time js
-# from flask_moment import Moment
-# from static_moment.flask_moment import Moment
-# moment = Moment(app)
 #-------------------------------------------------------------------------------------------
 #      markdown support
 import flaskext.markdown
@@ -71,24 +64,12 @@ from Pages import *
 if __name__ == '__main__':
     host = '0.0.0.0'
     port = 4999
-
-
-
     print('''
-
    ╔═════════════════════════════════════════════════════
    ║ profile={}
    ║┌────────────────────────────┐
    ║   http://localhost:{}
    ║└────────────────────────────┘
    ╚═════════════════════════════════════════════════════
-    '''.format(datafile,port))
-
-
+    '''.format(str( EncryptionAPI.getDataSource()  ),port))
     app.run(host=host, port=port, debug= True )
-
-
-
-
-    # linux
-    # webbrowser.open(url='http://0.0.0.0:4999', new=1)
