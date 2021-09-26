@@ -42,7 +42,7 @@ os.system(compileCMD)
 
 #----
 try:
-    os.makedirs(DIR,'bin')
+    os.makedirs( os.path.join(DIR,'bin') )
 except:
     pass
 try:
