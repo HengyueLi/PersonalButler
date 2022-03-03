@@ -317,26 +317,33 @@
             </div>
             <div class="card-body">
                 {% for record in people.Dict['Recdl'] %}
-                <!-- >>>>>>>>>>>>>>>>>> one record >>>>>>>>>>>>>>>>>>>>>> -->
-                {#% set ctime = moment( app.config['fun_FUM'].gettimeobj( record['time'] )  ).calendar() %#}
-                {% set dt = app.config['fun_FUM'].gettimeobj( record['time'] ) %}
-                {% set ctime = app.config['fun_FUM'].getDatetimeStrWithZone( dt ) %}
+                  <!-- >>>>>>>>>>>>>>>>>> one record >>>>>>>>>>>>>>>>>>>>>> -->
+                  {#% set ctime = moment( app.config['fun_FUM'].gettimeobj( record['time'] )  ).calendar() %#}
+                  {% set dt = app.config['fun_FUM'].gettimeobj( record['time'] ) %}
+                  {% set ctime = app.config['fun_FUM'].getDatetimeStrWithZone( dt ) %}
 
-                <div class="card border-primary mb-3" style="width: 100%;">
-                    <div class="card-header"> {{ctime}}
-                      <button onclick="EditeRecoredButton({{record['time']}},{{record['itemid']}})" type="button" class="btn btn-light btn-lg">
-                        <i class="far fa-edit"></i>
-                      </button>
-                      <button onclick="DeleteRecoredButton({{record['itemid']}})" type="button" class="btn btn-outline-danger btn-lg">
-                        <i class="far fa-trash-alt"></i>
-                      </button>
-                    </div>
-                    <div class="card-body text-primary">
-                        <p class="card-text">{{ record['text'] |markdown }}</p>
-                    </div>
-                    <p id="hidetxt{{record['itemid']}}" style='display:none'>{{record['text']}}</p>
-                </div>
-                <!-- <<<<<<<<<<<<<<<<<<<<<< one record <<<<<<<<<<<<<<<<<<<<<< -->
+                  <div class="card border-primary mb-3" style="width: 100%;">
+                      <div class="card-header"> {{ctime}}
+                        <button onclick="EditeRecoredButton({{record['time']}},{{record['itemid']}})" type="button" class="btn btn-light btn-lg">
+                          <i class="far fa-edit"></i>
+                        </button>
+                        <button onclick="DeleteRecoredButton({{record['itemid']}})" type="button" class="btn btn-outline-danger btn-lg">
+                          <i class="far fa-trash-alt"></i>
+                        </button>
+                      </div>
+                      <div class="card-body text-primary" id="record_{{record['itemid']}}">
+                      </div>
+                      <pre id="hidetxt{{record['itemid']}}" style='display:none'>{{record['text']}}</pre>
+                      <!-- <script>alert("{{record['text']}}")</script> -->
+                  </div>
+                  <!-- <<<<<<<<<<<<<<<<<<<<<< one record <<<<<<<<<<<<<<<<<<<<<< -->
+                  <script>
+                    function render_record_{{record['itemid']}} (){
+                      var recordBoard = document.getElementById("record_{{record['itemid']}}");
+                      recordBoard.innerHTML = ConvertMakdown2Html(  {{ record['text'] | tojson }} )
+                    }
+                    window.addEventListener("load", render_record_{{record['itemid']}} );
+                  </script>
                 {% endfor %}
             </div>
         </div>
@@ -405,11 +412,20 @@
       $('#CreateNewRecored').modal()
     }
 
+    function decodeString(Stri){
+      // ------------------------------------------------------ decode ---
+      // https://stackoverflow.com/a/42182294/7766432
+      var txt = document.createElement("textarea");
+      txt.innerHTML = Stri;
+      return txt.value;
+    }
+
     function EditeRecoredButton(sec,itemid) {
       //   copy time
       SetFormTimeBySecCreateNewRecored_time(sec)
       //   copy recored
       var currentrecord = document.getElementById("hidetxt"+itemid).innerHTML
+      currentrecord = decodeString(currentrecord)
       document.getElementById("CreateNewRecored_txt").value = currentrecord;
       //   set action
       var action = "{{url_for('Relation_EditeRecord',id=peopleid,itemid=6666)}}"

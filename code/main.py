@@ -35,8 +35,8 @@ app.config['ENCRYPTION_CLASS'] = EncryptionAPI
 app.config['DATA_CONTAINER'] = {}
 #-------------------------------------------------------------------------------------------
 #      markdown support
-import flaskext.markdown
-flaskext.markdown.Markdown(app)
+# import flaskext.markdown
+# flaskext.markdown.Markdown(app)
 
 
 
