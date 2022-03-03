@@ -1,5 +1,5 @@
 Flask==2.0.3
 Flask-WTF==0.14.3
 pypinyin==0.37.0
-WTForms==2.2.1
+WTForms==2.3.0
 rudeencrypt==2021.5.15.1110
