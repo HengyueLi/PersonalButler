@@ -2,9 +2,10 @@
 from main import app,permission
 import flask,datetime
 import pypinyin
+from zhdate import ZhDate
 
 from flask_wtf import FlaskForm
-from wtforms import StringField,FloatField,IntegerField,TextField,validators,SelectField
+from wtforms import StringField,FloatField,IntegerField,validators,SelectField#,TextField
 from wtforms.widgets import TextArea
 
 
@@ -57,12 +58,13 @@ class PeopleInforForm(FlaskForm):
                                                           (11,'November'),
                                                           (12,'December'),    ] )
     Birthday_Year  = SelectField(coerce = int ,choices = [(0,'Year')] + [ (y,str(y)) for y in range(datetime.datetime.now().year,datetime.datetime.now().year-100,-1)] )
+    Birthday_ChL = SelectField(coerce = str ,choices = choiceList(['True','False']) )
     bloodType = SelectField(coerce = str , choices = choiceList(['A','B','AB','O']) )
     HomeTown  = StringField(default='')
     NationID  = StringField(default='')
 
     Phone     = StringField(default='')
-    Email     = TextField([ validators.Email()],default='')
+    Email     = StringField(default='')#TextField([ validators.Email()],default='')
     Address   = StringField(default='')
     Others    = StringField(default='')
 
@@ -142,7 +144,8 @@ class People():
     @staticmethod
     def getZodiac(born):
         if born is None: return 'X'
-        year = born.year
+        dt_luna = ZhDate.from_datetime(born)
+        year = dt_luna.lunar_year
         Zodiac = u'猴鸡狗猪鼠牛虎兔龙蛇马羊'
         return Zodiac[year%12]
 
@@ -195,7 +198,7 @@ class People():
         if year == 0 or month == 0 or day == 0 :
             return None
         else:
-            return datetime.date(year, month, day)
+            return datetime.datetime(year, month, day)
 
 
 
