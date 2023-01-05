@@ -2,6 +2,13 @@
 
 import sys,shutil,os,datetime
 
+try:
+    sys.path.append(os.environ["PYLIB"])
+    from GetDevice import GetDevice
+    device = GetDevice.getDevice()
+except:
+    device = None
+
 
 
 
@@ -11,13 +18,16 @@ def getplatformOS():
 
 
 def getexeName(prefix):
-    OSname = getplatformOS()
-    if OSname =='win32':
-        return prefix + '_win32.exe'
-    elif OSname =='darwin':
-        return prefix + '_darwin.app'
+    if device is not None:
+        return device.getName()
     else:
-        print('exeName not defined for OS ='+str(OSname))
+        OSname = getplatformOS()
+        if OSname =='win32':
+            return prefix + '_win32.exe'
+        elif OSname =='darwin':
+            return prefix + '_darwin.app'
+        else:
+            print('exeName not defined for OS ='+str(OSname))
 
 
 
@@ -31,7 +41,8 @@ templatesPath = os.path.join(DIR,'templates')
 
 if getplatformOS() == 'win32':
     compileCMD = '''pyinstaller --add-data "static;static" --add-data "templates;templates" -F -n {} main.py'''.format(exeName)
-elif getplatformOS() == 'darwin':
+# elif getplatformOS() == 'darwin':
+else:
     compileCMD = '''pyinstaller --add-data "static:static" --add-data "templates:templates"  -F -n {}  main.py'''.format(exeName)
 
 

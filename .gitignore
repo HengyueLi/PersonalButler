@@ -16,3 +16,5 @@ code/profile\.dat
 ENV_fedora/
 
 \.DS_Store
+
+code/bin/
