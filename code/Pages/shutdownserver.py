@@ -1,6 +1,7 @@
 
 from main import app,permission
 
+import os,signal
 import flask
 
 
@@ -18,8 +19,5 @@ import flask
 @app.route('/shutdownserver')
 @permission.ValidForLogged
 def shutdownserver():
-    func = flask.request.environ.get('werkzeug.server.shutdown')
-    if func is None:
-        raise RuntimeError('Not running with the Werkzeug Server')
-    func()
+    os.kill(os.getpid(), signal.SIGINT)
     return 'Server shutting down...'
