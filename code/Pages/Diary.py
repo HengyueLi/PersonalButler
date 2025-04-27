@@ -3,7 +3,7 @@ from main import app,permission
 import flask,datetime,time
 
 from flask_wtf import FlaskForm
-from wtforms import StringField,FloatField,IntegerField,TextField,validators,SelectField
+from wtforms import StringField,FloatField,IntegerField,validators,SelectField
 from wtforms.widgets import TextArea
 
 
