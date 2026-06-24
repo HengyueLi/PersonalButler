@@ -6,8 +6,8 @@
 {% macro SearchPasswordIterm() %}
 <div class="input-group">
   <form class="d-flex gap-2" method="get" onsubmit="return SubmitSearchPassword();">
-      <input id="searchpassword_inputtxt" class="form-control" type="text" placeholder="Search" aria-label="Search">
-      <button onclick="SubmitSearchPassword()" class="btn btn-outline-success">Search</button>
+      <input id="searchpassword_inputtxt" class="form-control form-control-sm" type="text" placeholder="Search" aria-label="Search">
+      <button onclick="SubmitSearchPassword()" class="btn btn-outline-success btn-sm">Search</button>
   </form>
 </div>
 
@@ -58,7 +58,7 @@
 
 {% macro AddPasswordClass(classform) %}
 <div class="btn-group me-2" role="group" aria-label="Password class actions">
-  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#password_add_class">
+  <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#password_add_class">
     New class
   </button>
 </div>
@@ -93,7 +93,7 @@
 
 {% macro AddPasswordIterm(Class,itemform) %}
 <div class="btn-group me-2" role="group" aria-label="Password item actions">
-  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#password_add_class_item">
+  <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal" data-bs-target="#password_add_class_item">
     New iterm
   </button>
 </div>
@@ -131,7 +131,6 @@ function submitpassword_add_class_item() {
 
 
 {%- endmacro %}
-
 
 
 

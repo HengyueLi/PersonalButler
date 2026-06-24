@@ -35,7 +35,7 @@
 
 
 {% block UpRightButton %}
-<button onclick="return SubmitPersonInforForm();" class="btn btn-primary" role="button">
+<button onclick="return SubmitPersonInforForm();" class="btn btn-primary btn-sm" role="button">
     <i class="fas fa-vote-yea"></i>
 </button>
 
@@ -51,13 +51,13 @@
 
 <div class="container mb-3">
     <div class="card">
-        <div class="card-body">
+        <div class="card-body py-2">
             <div class="btn-toolbar gap-2 flex-wrap" role="toolbar" aria-label="Toolbar with button groups">
                 <form class="d-flex gap-2 me-2" onsubmit="return SubmitSearchPeople();">
-                    <input id="searchpeople_inputtxt" class="form-control" type="text" placeholder="Search" aria-label="Search">
-                    <button type="submit" class="btn btn-outline-success">Search</button>
+                    <input id="searchpeople_inputtxt" class="form-control form-control-sm" type="text" placeholder="Search" aria-label="Search">
+                    <button type="submit" class="btn btn-outline-success btn-sm">Search</button>
                 </form>
-                <button data-bs-toggle="modal" data-bs-target="#CreateNewRelation" type="button" class="btn btn-secondary"><i class="fas fa-user-plus"></i></button>
+                <button data-bs-toggle="modal" data-bs-target="#CreateNewRelation" type="button" class="btn btn-secondary btn-sm"><i class="fas fa-user-plus"></i></button>
             </div>
         </div>
     </div>
@@ -114,7 +114,7 @@
 
             <div class="card-header fw-bold">Name</div>
 
-            <div class="list-group list-group-flush overflow-auto vh-100">
+            <div class="list-group list-group-flush overflow-auto" data-fit-viewport>
                 {% set Peoplelist = people.getPeoplelist() %}
                 {% for id in Peoplelist %}
                   {% set obj = Peoplelist[id] %}

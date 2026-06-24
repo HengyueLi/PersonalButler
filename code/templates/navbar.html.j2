@@ -235,10 +235,21 @@
 
 
    function ScrollIntoView(id){
-     // document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'nearest'});
      var el = document.getElementById(id);
-     if (el) {
-       el.scrollIntoView(false);
+     if (!el) {
+       return;
+     }
+     var scrollParent = el.closest('.overflow-auto');
+     if (scrollParent) {
+       var parentRect = scrollParent.getBoundingClientRect();
+       var elRect = el.getBoundingClientRect();
+       if (elRect.top < parentRect.top) {
+         scrollParent.scrollTop -= parentRect.top - elRect.top;
+       } else if (elRect.bottom > parentRect.bottom) {
+         scrollParent.scrollTop += elRect.bottom - parentRect.bottom;
+       }
+     } else {
+       el.scrollIntoView({ block: 'nearest' });
      }
    }
 
@@ -254,6 +265,24 @@
      var conv = new showdown.Converter();
      console.log(MDtxt);
      return conv.makeHtml(MDtxt);
+   }
+
+   function FitViewportLists() {
+     document.querySelectorAll('[data-fit-viewport]').forEach(function(el) {
+       var rect = el.getBoundingClientRect();
+       var bottomPadding = 24;
+       var minHeight = 180;
+       var height = Math.max(minHeight, window.innerHeight - rect.top - bottomPadding);
+       el.style.maxHeight = height + 'px';
+     });
+   }
+
+   window.addEventListener('load', FitViewportLists);
+   window.addEventListener('resize', FitViewportLists);
+   if (document.readyState === 'loading') {
+     document.addEventListener('DOMContentLoaded', FitViewportLists);
+   } else {
+     FitViewportLists();
    }
 
 

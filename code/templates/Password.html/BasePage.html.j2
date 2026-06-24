@@ -1,8 +1,8 @@
 {% extends "navbar.html.j2" %}
 
 
-{% set Classstyleclass = "list-group-item list-group-item-action py-2" %}
-{% set itermstyleclass = "list-group-item list-group-item-action py-2" %}
+{% set Classstyleclass = "list-group-item list-group-item-action py-1" %}
+{% set itermstyleclass = "list-group-item list-group-item-action py-1" %}
 
 
 
@@ -25,7 +25,7 @@ document.getElementById("nabbar_button_password").classList.add("active")
 {% block main %}
 <div class="container mb-3">
   <div class="card">
-    <div class="card-body">
+    <div class="card-body py-2">
       <div class="btn-toolbar gap-2 flex-wrap" role="toolbar" aria-label="Toolbar with button groups">
       {% block actionbar %}
       {% endblock %}
@@ -47,7 +47,7 @@ document.getElementById("nabbar_button_password").classList.add("active")
       <div class="col-md-6 mb-3">
         <div class="card h-100">
           <div class="card-header fw-bold">Class</div>
-          <div class="list-group list-group-flush overflow-auto vh-100">
+          <div class="list-group list-group-flush overflow-auto" data-fit-viewport>
             {% block classlist %}
             {% endblock %}
           </div>
@@ -58,7 +58,7 @@ document.getElementById("nabbar_button_password").classList.add("active")
       <div class="col-md-6 mb-3">
         <div class="card h-100">
           <div class="card-header fw-bold">Item</div>
-          <div class="list-group list-group-flush overflow-auto vh-100">
+          <div class="list-group list-group-flush overflow-auto" data-fit-viewport>
             {% block itemlist %}
             {% endblock %}
           </div>

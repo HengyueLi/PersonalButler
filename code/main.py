@@ -65,6 +65,11 @@ from Pages import *
 if __name__ == '__main__':
     host = '0.0.0.0'
     port = 4999
+    get_data_source = getattr(EncryptionAPI, 'getDataSource', None)
+    try:
+        profile_desc = str(get_data_source()) if callable(get_data_source) else EncryptionAPI.__name__
+    except Exception:
+        profile_desc = EncryptionAPI.__name__
     print('''
    ╔═════════════════════════════════════════════════════
    ║ profile={}
@@ -72,5 +77,5 @@ if __name__ == '__main__':
    ║   http://localhost:{}
    ║└────────────────────────────┘
    ╚═════════════════════════════════════════════════════
-    '''.format(str( EncryptionAPI.getDataSource()  ),port))
+    '''.format(profile_desc, port))
     app.run(host=host, port=port, debug= True )

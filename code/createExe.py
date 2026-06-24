@@ -39,11 +39,13 @@ exeName = getexeName(PREFIX)
 staticPath = os.path.join(DIR,'static')
 templatesPath = os.path.join(DIR,'templates')
 
+
+pyinstaller_opt = "-i app.ico"
 if getplatformOS() == 'win32':
-    compileCMD = '''pyinstaller --add-data "static;static" --add-data "templates;templates" -F -n {} main.py'''.format(exeName)
+    compileCMD = f'''pyinstaller {pyinstaller_opt} --add-data "static;static" --add-data "templates;templates" -F -n {exeName} main.py'''
 # elif getplatformOS() == 'darwin':
 else:
-    compileCMD = '''pyinstaller --add-data "static:static" --add-data "templates:templates"  -F -n {}  main.py'''.format(exeName)
+    compileCMD = f'''pyinstaller {pyinstaller_opt} --add-data "static:static" --add-data "templates:templates"  -F -n {exeName}  main.py'''
 
 
 
