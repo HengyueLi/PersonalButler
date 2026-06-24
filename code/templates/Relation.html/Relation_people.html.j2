@@ -31,46 +31,11 @@
     }
 </script>
 <!-- <script src="{{url_for('static',filename='js/dobpicker.js')}}"></script> -->
-
-<style>
-
-    .Namelist_frame_fixedbox {
-        /* height: 70%; */
-        /* height: 600px; */
-        height: 60vh;
-        /*   same height   */
-        width: 20%;
-        /* border:groove; */
-    }
-
-
-
-
-
-    .Infor_frame_fixedbox {
-        height: 70%;
-        /*   same height   */
-        width: 80%;
-        /* border:groove; */
-    }
-
-    .Namelist_frame_title {
-        background-color: grey;
-        height: 5%;
-        width: 100%;
-    }
-
-    .listgroup-scroll {
-        overflow-y: scroll;
-        width: 100%;
-        height: 95%
-    }
-</style>
 {% endblock %}
 
 
 {% block UpRightButton %}
-<button onclick="return SubmitPersonInforForm();" class="btn btn-primary btn-lg" role="button">
+<button onclick="return SubmitPersonInforForm();" class="btn btn-primary" role="button">
     <i class="fas fa-vote-yea"></i>
 </button>
 
@@ -84,15 +49,15 @@
 <!-- >>>>>>>>>>>>>> main >>>>>>>>>>>>>>>>>>>>>>>>>> -->
 {% block main %}
 
-<div class="jumbotron">
-    <div class="container">
-        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-            <div class="input-group">
-                <form class="form-inline my-2 my-lg-0" onsubmit="return SubmitSearchPeople();">
-                    <input id = 'searchpeople_inputtxt' class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-                    <button type='submit' class="btn btn-outline-success my-2 my-sm-0">Search</button>
+<div class="container mb-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="btn-toolbar gap-2 flex-wrap" role="toolbar" aria-label="Toolbar with button groups">
+                <form class="d-flex gap-2 me-2" onsubmit="return SubmitSearchPeople();">
+                    <input id="searchpeople_inputtxt" class="form-control" type="text" placeholder="Search" aria-label="Search">
+                    <button type="submit" class="btn btn-outline-success">Search</button>
                 </form>
-                <button data-toggle="modal" data-target="#CreateNewRelation" type="button" class="btn btn-secondary"><i class="fas fa-user-plus"></i></button>
+                <button data-bs-toggle="modal" data-bs-target="#CreateNewRelation" type="button" class="btn btn-secondary"><i class="fas fa-user-plus"></i></button>
             </div>
         </div>
     </div>
@@ -115,7 +80,7 @@
       },
       success: function(data) {
         document.getElementById("searchpeoplelist").innerHTML = data
-        $('#searchpeoplemodal').modal()
+        ShowBootstrapModal('searchpeoplemodal')
       },
       type: 'GET'
     });
@@ -141,16 +106,15 @@
 
 
 <div class="container">
-    <div class='row border border-primary'>
+    <div class="row">
 
         <!-- >>>>>>>>>>>>> name list >>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
-        <div class=' border Namelist_frame_fixedbox'>
+        <div class="col-md-3 mb-3">
+          <div class="card h-100">
 
-            <center class='Namelist_frame_title'>
-                <strong>Name</strong>
-            </center>
+            <div class="card-header fw-bold">Name</div>
 
-            <div class="list-group listgroup-scroll">
+            <div class="list-group list-group-flush overflow-auto vh-100">
                 {% set Peoplelist = people.getPeoplelist() %}
                 {% for id in Peoplelist %}
                   {% set obj = Peoplelist[id] %}
@@ -162,101 +126,105 @@
                 <a id="listshow_{{id}}" href="{{url_for('Relation_people',id=obj['id'])}}" class="list-group-item list-group-item-action {{active}}">{{obj['name']}}</a>
                 {% endfor %}
             </div>
+          </div>
         </div>
         <!-- name list <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< -->
 
         <!-- >>>>>>>>>>>>> infor >>>>>>>>>>>>>>>>>>>>>>>>>>>>>  -->
 
-        <div class='border Infor_frame_fixedbox' style="overflow-y: scroll;">
+        <div class="col-md-9 mb-3">
             {% block people_infor_form %}
-            <div style="padding:2%;">
+            <div>
 
-                <div class='form-div border'>
+                <div class="card mb-3">
+                  <div class="card-body">
                     <form action="{{url_for('Relation_SavePersonInfor',id=peopleid)}}" method='post' id='personinforform'>
                         {{ people.iform.hidden_tag() }}
-                        <div class="form-row">
-                            <div class="col-6 mb-0">
+                        <div class="row g-2">
+                            <div class="col-md-6 mb-0">
                                 <label>Name (Age:{{people.age}}, {{people.zodiac}})</label>
                                 {{ people.iform.name(class="form-control",placeholder="name") }}
                             </div>
-                            <div class="col-2 mb-0">
+                            <div class="col-md-2 mb-0">
                                 <label><i class="fas fa-male"></i>/<i class="fas fa-female"></i>
                                 </label>
-                                {{ people.iform.sex(class="custom-select")}}
+                                {{ people.iform.sex(class="form-select")}}
                             </div>
-                            <div class="col-2 mb-0">
+                            <div class="col-md-2 mb-0">
                                 <label>MBTI</label>
-                                {{ people.iform.MBTI(class="custom-select")}}
+                                {{ people.iform.MBTI(class="form-select")}}
                             </div>
-                            <div class="col-2 mb-0">
+                            <div class="col-md-2 mb-0">
                                 <label>blood type</label>
-                                {{ people.iform.bloodType(class="custom-select") }}
+                                {{ people.iform.bloodType(class="form-select") }}
                             </div>
                         </div>
 
-                        <div class="form-row">
-                            <div class="form-group col-2">
+                        <div class="row g-2 mt-1">
+                            <div class="mb-3 col-md-2">
                                 <label>Birthday (BC ABS)</label>
-                                {{ people.iform.Birthday_Day(class="custom-select") }}
+                                {{ people.iform.Birthday_Day(class="form-select") }}
                             </div>
-                            <div class="form-group col-2">
+                            <div class="mb-3 col-md-2">
                                 <label>&nbsp;</label>
-                                {{ people.iform.Birthday_Month(class="custom-select") }}
+                                {{ people.iform.Birthday_Month(class="form-select") }}
                             </div>
-                            <div class="form-group col-2">
+                            <div class="mb-3 col-md-2">
                                 <label>&nbsp;</label>
-                                {{ people.iform.Birthday_Year(class="custom-select") }}
+                                {{ people.iform.Birthday_Year(class="form-select") }}
                             </div>
-                            <div class="form-group col-2">
+                            <div class="mb-3 col-md-2">
                                 <label>&nbsp;庆农</label>
-                                {{ people.iform.Birthday_ChL(class="custom-select") }}
+                                {{ people.iform.Birthday_ChL(class="form-select") }}
                             </div>
-                            <div class="form-group col-4">
-                                <label class="my-1 mr-2">&nbsp;<i class="far fa-id-card"></i></label>
+                            <div class="mb-3 col-md-4">
+                                <label class="my-1 me-2">&nbsp;<i class="far fa-id-card"></i></label>
                                 {{ people.iform.NationID(class="form-control",placeholder="NationID") }}
                             </div>
                         </div>
 
 
-                        <div class="form-row">
+                        <div class="row g-2">
                             <div class="col">
-                                <label class="my-1 mr-2"><i class="fas fa-phone"></i></label>
+                                <label class="my-1 me-2"><i class="fas fa-phone"></i></label>
                                 {{ people.iform.Phone(class="form-control",placeholder="Phone") }}
                             </div>
                             <div class="col">
-                                <label class="my-1 mr-2"><i class="far fa-envelope"></i></label>
+                                <label class="my-1 me-2"><i class="far fa-envelope"></i></label>
                                 {{ people.iform.Email(class="form-control",placeholder="Email") }}
                             </div>
 
                         </div>
 
-                        <div class="form-row">
+                        <div class="row g-2 mt-1">
                           <div class="col">
-                              <label class="my-1 mr-2"><i class="fas fa-map-marked-alt"></i></label>
+                              <label class="my-1 me-2"><i class="fas fa-map-marked-alt"></i></label>
                               {{ people.iform.Address(class="form-control",placeholder="Address") }}
                           </div>
                             <div class="col">
-                                <label class="my-1 mr-2">Hometown</label>
+                                <label class="my-1 me-2">Hometown</label>
                                 {{ people.iform.HomeTown(class="form-control",placeholder="Hometown") }}
                             </div>
                         </div>
 
-                        <div class="form-row">
+                        <div class="row mt-1">
                             <div class="col">
-                                <label class="my-1 mr-2">Others:</label>
+                                <label class="my-1 me-2">Others:</label>
                                 {{ people.iform.Others(class="form-control",placeholder="Others") }}
                             </div>
                         </div>
 
                     </form>
+                  </div>
                 </div>
 
-                <div class='border border-success form-row m-1 p-2'>
-                    <div class='row'>
-                        <p class='col'><i class="fas fa-globe"></i></p>
-                        <button data-toggle="modal" data-target="#appendWorkingExp" type="button" class="col mb-3 btn btn-primary"><i class="far fa-plus-square"></i></button>
+                <div class="card border-success mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-globe"></i> Work</span>
+                        <button data-bs-toggle="modal" data-bs-target="#appendWorkingExp" type="button" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></button>
                     </div>
-                    <table class="table table-hover">
+                    <div class="table-responsive">
+                    <table class="table table-hover mb-0">
                         <tbody>
                           {% for item in people.Dict['Workl'] %}
                             <tr>
@@ -267,7 +235,7 @@
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
                                         <button onclick="ExperienceMoveItem('Workl',{{item['itemid']}},0)" type="button" class="btn btn-secondary"><i class="fas fa-arrow-up"></i></button>
                                         <button onclick="ExperienceMoveItem('Workl',{{item['itemid']}},2)" type="button" class="btn btn-secondary"><i class="fas fa-arrow-down"></i></button>
-                                        <button onclick="EditExperienceItem('Workl',{{item['itemid']}})"   type="button" class="btn btn-secondary"><i class="far fa-edit"></i></button>
+                                        <button onclick="EditExperienceItem('Workl',{{item['itemid']}})" type="button" class="btn btn-secondary"><i class="far fa-edit"></i></button>
                                         <button onclick="ExperienceDeleteItem('Workl',{{item['itemid']}})" type="button" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                                     </div>
                                 </td>
@@ -275,14 +243,16 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    </div>
                 </div>
 
-                <div class='border border-primary form-row m-1 p-2'>
-                    <div class='row'>
-                        <p class='col'><i class="fas fa-graduation-cap"></i></p>
-                        <button  data-toggle="modal" data-target="#appendEducationExp" type="button" class="col mb-3 btn btn-primary"><i class="far fa-plus-square"></i></button>
+                <div class="card border-primary mb-3">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-graduation-cap"></i> Education</span>
+                        <button data-bs-toggle="modal" data-bs-target="#appendEducationExp" type="button" class="btn btn-primary btn-sm"><i class="far fa-plus-square"></i></button>
                     </div>
-                    <table class="table table-hover">
+                    <div class="table-responsive">
+                    <table class="table table-hover mb-0">
                         <tbody>
                           {% for item in people.Dict['Educl'] %}
                             <tr>
@@ -301,6 +271,7 @@
                             {% endfor %}
                         </tbody>
                     </table>
+                    </div>
                 </div>
             </div>
             {% endblock %}
@@ -310,12 +281,12 @@
 
     <!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>  recording >>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
     {% block record_border %}
-    <div class='row  recording_frame '>
+    <div class="row">
 
-        <div class="card border-primary mb-3" style="width: 100%;">
-            <div class="card-header">Recording
-                <!-- <button data-toggle="modal" data-target="#CreateNewRecored" type="button" class="btn btn-primary"> -->
-                <button onclick="CreateNewRecoredButton()" type="button" class="btn btn-primary">
+        <div class="col-12">
+        <div class="card border-primary mb-3 w-100">
+            <div class="card-header d-flex justify-content-between align-items-center">Recording
+                <button onclick="CreateNewRecoredButton()" type="button" class="btn btn-primary btn-sm">
                   <i class="fas fa-folder-plus"></i>
                 </button>
             </div>
@@ -326,18 +297,21 @@
                   {% set dt = app.config['fun_FUM'].gettimeobj( record['time'] ) %}
                   {% set ctime = app.config['fun_FUM'].getDatetimeStrWithZone( dt ) %}
 
-                  <div class="card border-primary mb-3" style="width: 100%;">
-                      <div class="card-header"> {{ctime}}
-                        <button onclick="EditeRecoredButton({{record['time']}},{{record['itemid']}})" type="button" class="btn btn-light btn-lg">
+                  <div class="card border-primary mb-3 w-100">
+                      <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>{{ctime}}</span>
+                        <span class="btn-group btn-group-sm" role="group">
+                        <button onclick="EditeRecoredButton({{record['time']}},{{record['itemid']}})" type="button" class="btn btn-light">
                           <i class="far fa-edit"></i>
                         </button>
-                        <button onclick="DeleteRecoredButton({{record['itemid']}})" type="button" class="btn btn-outline-danger btn-lg">
+                        <button onclick="DeleteRecoredButton({{record['itemid']}})" type="button" class="btn btn-outline-danger">
                           <i class="far fa-trash-alt"></i>
                         </button>
+                        </span>
                       </div>
                       <div class="card-body text-primary" id="record_{{record['itemid']}}">
                       </div>
-                      <pre id="hidetxt{{record['itemid']}}" style='display:none'>{{record['text']}}</pre>
+                      <pre id="hidetxt{{record['itemid']}}" class="d-none">{{record['text']}}</pre>
                       <!-- <script>alert("{{record['text']}}")</script> -->
                   </div>
                   <!-- <<<<<<<<<<<<<<<<<<<<<< one record <<<<<<<<<<<<<<<<<<<<<< -->
@@ -351,6 +325,7 @@
                 {% endfor %}
             </div>
         </div>
+        </div>
     </div>
 
 
@@ -362,18 +337,18 @@
     <form id = 'relation_form_record' action="" method='post'>
         {{ people.recform.hidden_tag() }}
         <div class="modal-body">
-            <div class="form-group">
+            <div class="mb-3">
                 <label  class="col-form-label">Record:</label>
-                {{ people.recform.record(class="form-control",style="height: 200px;", id = 'CreateNewRecored_txt' ) }}
-                <div style="display:none">{{ people.recform.time(id = 'CreateNewRecored_time')}}</div>
+                {{ people.recform.record(class="form-control", rows="8", id = 'CreateNewRecored_txt' ) }}
+                <div class="d-none">{{ people.recform.time(id = 'CreateNewRecored_time')}}</div>
             </div>
-            <div class="form-group">
+            <div class="mb-3">
                 <label  class="col-form-label">Preview:</label>
-                <div class="border" style="height:200px;overflow-y: scroll;" id = 'CreateNewRecored_txt_pre'></div>
+                <div class="border rounded p-2" id = 'CreateNewRecored_txt_pre'></div>
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button onclick="return checksubmitrecord();" type="submit" class="btn btn-primary">submit</button>
         </div>
     </form>
@@ -413,7 +388,7 @@
       // first call synchronization_input_preview()
       synchronization_input_preview()
       //   show modal
-      $('#CreateNewRecored').modal()
+      ShowBootstrapModal('CreateNewRecored')
     }
 
     function decodeString(Stri){
@@ -438,7 +413,7 @@
        // first call synchronization_input_preview()
       synchronization_input_preview()
       //   show modal
-      $('#CreateNewRecored').modal()
+      ShowBootstrapModal('CreateNewRecored')
     }
 
     function DeleteRecoredButton(itemid) {
@@ -487,13 +462,13 @@
 <form action="{{url_for('Relation_createnew')}}" method='post'>
     {{ people.form1.hidden_tag() }}
     <div class="modal-body">
-        <div class="form-group">
+        <div class="mb-3">
             <label for="recipient-name" class="col-form-label">Name:</label>
             {{ people.form1.file1(type="text", class="form-control", id="createnew-name") }}
         </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">append</button>
     </div>
 </form>
@@ -514,21 +489,21 @@
 <form action="{{action}}" method='post' id = "{{uid}}_form">
   {{Expform.hidden_tag()}}
     <div class="modal-body">
-      <div class="form-group">
+      <div class="mb-3">
         <label for="when" class="col-form-label">when</label>
         {{Expform.when(class="form-control",id =uid+"_when" )}}
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="where" class="col-form-label">where</label>
         {{Expform.where(class="form-control",id =uid+"_where")}}
       </div>
-      <div class="form-group">
+      <div class="mb-3">
         <label for="what" class="col-form-label">what</label>
         {{Expform.what(class="form-control",id =uid+"_what")}}
       </div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">append</button>
     </div>
 </form>
@@ -572,7 +547,7 @@
    document.getElementById("EditExperience_where").value = document.getElementById(itemid+"_where").innerText;
    document.getElementById("EditExperience_what").value  = document.getElementById(itemid+"_what").innerText;
    document.getElementById("EditExperience_form").action = action;
-  $('#EditExperience').modal('show');
+  ShowBootstrapModal('EditExperience');
  }
 
 </script>

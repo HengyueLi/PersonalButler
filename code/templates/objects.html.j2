@@ -11,19 +11,17 @@ will return  function:
 
 
 {% if IsShowTime %}
-  {% set display = "" %}
+  {% set display_class = "" %}
 {% else %}
-  {% set display = "display:none" %}
+  {% set display_class = "d-none" %}
 {% endif %}
 
 
 {% macro Input(id,tag) %}
 <div class="col-md-4">
-  <label class="sr-only" for="inlineFormInputGroup">{{tag}}</label>
+  <label class="visually-hidden" for="inlineFormInputGroup">{{tag}}</label>
   <div class="input-group mb-2">
-    <div class="input-group-prepend">
-      <div class="input-group-text">{{tag}}</div>
-    </div>
+    <span class="input-group-text">{{tag}}</span>
     <input type="text" class="form-control" id="{{id}}" placeholder="{{tag}}">
   </div>
 </div>
@@ -33,7 +31,7 @@ will return  function:
 
 
 <form>
-  <div class="form-row align-items-center">
+  <div class="row align-items-center">
 
     {{Input(id="TimeYear" +uid,tag='Year' )}}
     {{Input(id="TimeMonth"+uid,tag='Mon.')}}
@@ -41,7 +39,7 @@ will return  function:
  </div>
 
    <!-- hour min seconds -->
-  <div class="form-row align-items-center" style="{{display}}">
+  <div class="row align-items-center {{display_class}}">
     {{Input(id="TimeHour"   +uid,tag='Hour'       )}}
     {{Input(id="TimeMinutes"+uid,tag='Min.'    )}}
     {{Input(id="TimeSeconds"+uid,tag='Sec.'    )}}
@@ -139,14 +137,12 @@ function getInputTimeSecs{{uid}}() {
 
 
 {% macro BootstrapModalBody(uid,head=None) %}
-<div class="modal fade" id="{{uid}}" tabindex="-1" role="dialog" aria-labelledby="{{uid}}Label" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+<div class="modal fade" id="{{uid}}" tabindex="-1" aria-labelledby="{{uid}}Label" aria-hidden="true">
+  <div class="modal-dialog">
     <div class="modal-content">
        <div class="modal-header">
          <h5 class="modal-title" id="{{uid}}Label">{% if head != None %}{{head}}{% endif %}</h5>
-         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-           <span aria-hidden="true">&times;</span>
-         </button>
+         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
        </div>
        {{ caller() }}
     </div>
@@ -161,7 +157,7 @@ function getInputTimeSecs{{uid}}() {
 {% macro ClickToClipboard(txt,class="") %}
 {% set uid = range(1000000000, 9999999999) | random  %}
 
-<input onclick = "ClickToClipboard{{uid}}()"  class = "{{class}}"  value="{{txt}}" id="txt{{uid}}">
+<input onclick="ClickToClipboard{{uid}}()" class="{{class}}" value="{{txt}}" id="txt{{uid}}" readonly>
 
 <script>
 function ClickToClipboard{{uid}}() {

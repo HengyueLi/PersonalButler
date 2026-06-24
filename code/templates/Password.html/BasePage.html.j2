@@ -1,58 +1,12 @@
 {% extends "navbar.html.j2" %}
 
 
-{% set Classstyleclass = "list-group-item list-group-item-action " %}
-{% set itermstyleclass = "list-group-item list-group-item-action " %}
+{% set Classstyleclass = "list-group-item list-group-item-action py-2" %}
+{% set itermstyleclass = "list-group-item list-group-item-action py-2" %}
 
 
 
 {% block head %}
-<style>
-
-.containerbox {
-  /* max-height: 600px; */
-}
-
-.fixed-box {
-  /* min-height: 50%;
-  max-height: 50%; */
-  /* height: 600px; */
-  height:60vh;
-  min-width:  50%;
-}
-/* .fixed-box {
-  min-height: 600px;
-  max-height: 600px;
-  min-width:  50%;
-} */
-
-
-
-
-.listgroup_title{
-  background-color: grey;
-  height: 5%;
-}
-
-.listgroup-scroll{
-  overflow-y: scroll;
-  /* max-height: 45%; */
-  height: 95%;
-}
-
-
-
-
-
-.fixed-actionbox{
-  min-height: 600px;
-  max-height: 600px;
-}
-</style>
-
-
-
-
 <script>
 window.onload = function activate_navbar_PasswordButton() {
 document.getElementById("nabbar_button_password").classList.add("active")
@@ -69,11 +23,13 @@ document.getElementById("nabbar_button_password").classList.add("active")
 
 
 {% block main %}
-<div class="jumbotron">
-  <div class="container">
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+<div class="container mb-3">
+  <div class="card">
+    <div class="card-body">
+      <div class="btn-toolbar gap-2 flex-wrap" role="toolbar" aria-label="Toolbar with button groups">
       {% block actionbar %}
       {% endblock %}
+      </div>
     </div>
   </div>
 </div>
@@ -85,27 +41,27 @@ document.getElementById("nabbar_button_password").classList.add("active")
 
 
 {% block Class_Item_List_frame %}
-<div class='container'>
-    <div class='row border containerbox' style="padding:5px  ">
+<div class="container">
+    <div class="row">
 
-      <div class=' fixed-box' >
-        <center class='listgroup_title'>
-          <strong >Class</strong>
-        </center>
-        <div class="list-group listgroup-scroll"  >
+      <div class="col-md-6 mb-3">
+        <div class="card h-100">
+          <div class="card-header fw-bold">Class</div>
+          <div class="list-group list-group-flush overflow-auto vh-100">
             {% block classlist %}
             {% endblock %}
+          </div>
         </div>
       </div>
 
 
-      <div class=' fixed-box' >
-        <center class='listgroup_title'>
-          <strong >Item</strong>
-        </center>
-        <div class="list-group listgroup-scroll"  >
+      <div class="col-md-6 mb-3">
+        <div class="card h-100">
+          <div class="card-header fw-bold">Item</div>
+          <div class="list-group list-group-flush overflow-auto vh-100">
             {% block itemlist %}
             {% endblock %}
+          </div>
         </div>
       </div>
 

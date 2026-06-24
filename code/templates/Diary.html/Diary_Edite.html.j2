@@ -34,19 +34,18 @@
   {{OBJs.DateTimebock(uid='EditeDiary',IsShowTime = True )}}
   <form id='DiaryEditeForm'  >
     {{Diary.form.hidden_tag()}}
-    {{Diary.form.time(style="display:none")}}
-    {{Diary.form.id(style="display:none")}}
+    {{Diary.form.time(class="d-none")}}
+    {{Diary.form.id(class="d-none")}}
 
-    <div class="form-group">
+    <div class="mb-3">
         <label >Title</label>
         <!-- <input type="text" class="form-control" id="title" placeholder="title"> -->
         {{Diary.form.title(class="form-control",placeholder="title")}}
     </div>
 
-    <div class="form-group">
+    <div class="mb-3">
       <label class="col-form-label">Context:</label>
-      <!-- <textarea class="form-control" style="height:70%" id="record"></textarea> -->
-      {{Diary.form.record(class="form-control",style="height:70%")}}
+      {{Diary.form.record(class="form-control", rows="18")}}
     </div>
 
   </form>

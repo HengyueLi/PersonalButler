@@ -13,6 +13,7 @@ serverside    = os.path.join(Code_path, "server")
 #-------------------------------------------------------------------------------------------
 #     create app
 import flask
+
 if getattr(sys, 'frozen', False):
     template_folder = os.path.join(sys._MEIPASS,'templates')
     static_folder = os.path.join(sys._MEIPASS,'static')

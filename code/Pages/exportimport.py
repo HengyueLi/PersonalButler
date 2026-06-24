@@ -28,7 +28,7 @@ def exportData():
     Data['Diary'] = encObj.getAllItems(tableName='Diary')
     buffer.write(   json.dumps(Data,indent = 4)  .encode('utf-8') )
     buffer.seek(0)
-    return flask.send_file(buffer, as_attachment=True,attachment_filename='export.json')#,mimetype='text/csv')
+    return flask.send_file(buffer, as_attachment=True, download_name='export.json')
 
 
 

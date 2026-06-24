@@ -5,11 +5,9 @@
 
 {% macro SearchPasswordIterm() %}
 <div class="input-group">
-  <form class="form-inline my-2 my-lg-0" method='get' onsubmit="return SubmitSearchPassword();">
-    <!-- <div class="form-inline my-2 my-lg-0"> -->
-      <input id = 'searchpassword_inputtxt' class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-      <button onclick="SubmitSearchPassword()" class="btn btn-outline-success my-2 my-sm-0" >Search</button>
-    <!-- </div> -->
+  <form class="d-flex gap-2" method="get" onsubmit="return SubmitSearchPassword();">
+      <input id="searchpassword_inputtxt" class="form-control" type="text" placeholder="Search" aria-label="Search">
+      <button onclick="SubmitSearchPassword()" class="btn btn-outline-success">Search</button>
   </form>
 </div>
 
@@ -26,7 +24,7 @@
       },
       success: function(data) {
         document.getElementById("searchpasswordlist").innerHTML = data
-        $('#searchpasswordmodal').modal()
+        ShowBootstrapModal('searchpasswordmodal')
       },
       type: 'GET'
     });
@@ -59,8 +57,8 @@
 
 
 {% macro AddPasswordClass(classform) %}
-<div class="btn-group mr-2" role="group" aria-label="First group" >
-  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#password_add_class" >
+<div class="btn-group me-2" role="group" aria-label="Password class actions">
+  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#password_add_class">
     New class
   </button>
 </div>
@@ -68,13 +66,13 @@
 
 
 
-<div class="modal fade" id="password_add_class" tabindex="-1" role="dialog" aria-labelledby="password_add_classLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+<div class="modal fade" id="password_add_class" tabindex="-1" aria-labelledby="password_add_classLabel" aria-hidden="true">
+  <div class="modal-dialog">
     <form method='post' action = "{{url_for('PasswordAddClass')}}">
       {{ classform.hidden_tag() }}
       <div class="modal-content">
         <div class="modal-body">
-          <div class="form-group">
+          <div class="mb-3">
             <label for="recipient-name" class="col-form-label">New class name:</label>
             <!-- <input type="text" class="form-control" id="recipient-name"> -->
             {{ classform.Class(class="form-control") }}
@@ -94,25 +92,25 @@
 
 
 {% macro AddPasswordIterm(Class,itemform) %}
-<div class="btn-group mr-2" role="group" aria-label="First group" >
-  <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#password_add_class_item" >
+<div class="btn-group me-2" role="group" aria-label="Password item actions">
+  <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#password_add_class_item">
     New iterm
   </button>
 </div>
 
 
-<div class="modal fade" id="password_add_class_item" tabindex="-1" role="dialog" aria-labelledby="password_add_class_itemLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+<div class="modal fade" id="password_add_class_item" tabindex="-1" aria-labelledby="password_add_class_itemLabel" aria-hidden="true">
+  <div class="modal-dialog">
     <form method='post' action="{{url_for('PasswordAddItem',Class=Class)}}" >
       {{itemform.hidden_tag()}}
       <div class="modal-content">
         <div class="modal-body">
-          <div class="form-group">
+          <div class="mb-3">
             <label for="recipient-name" class="col-form-label">New item name:</label>
             <!-- <input type="text" class="form-control" id="recipient-name"> -->
             {{itemform.item(class="form-control")}}
           </div>
-          <div style="display:none"> {{itemform.time(id="password_add_class_item_gettime")}} </div>
+          <div class="d-none"> {{itemform.time(id="password_add_class_item_gettime")}} </div>
         </div>
         <div class="modal-footer">
           <button onclick="return submitpassword_add_class_item()" type="submit" class="btn btn-primary">add</button>
@@ -138,93 +136,3 @@ function submitpassword_add_class_item() {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="jumbotron">
-  <div class="container">
-
-
-
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-      <div class="btn-group mr-2" role="group" aria-label="First group" >
-        <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#password_add_class" >
-          New class
-        </button>
-      </div>
-
-
-      <!-- add class  -->
-
-      <div class="modal fade" id="password_add_class" tabindex="-1" role="dialog" aria-labelledby="password_add_classLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <form>
-            <div class="modal-content">
-              <div class="modal-body">
-                <div class="form-group">
-                  <label for="recipient-name" class="col-form-label">New class name:</label>
-                  <input type="text" class="form-control" id="recipient-name">
-                </div>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-primary">add</button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
-
-
-
-
-
-
-
-
-
-
-
-
-      <div class="btn-group mr-2" role="group" aria-label="First group">
-        <button type="button" class="btn btn-secondary">New iterm</button>
-      </div>
-
-      <div class="input-group">
-        <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form>
-      </div>
-
-
-
-    </div>
-
-
-  </div>
-</div>

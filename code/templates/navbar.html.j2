@@ -1,5 +1,5 @@
 
-<div id="navbartop" style="display: none;">
+<div id="navbartop" class="d-none">
   <!-- global variables for every page. -->
  {% set encObj = app.config['DATA_CONTAINER'] %}
  {#% set passwordm = container.GetTable('PasswordManager') %#}
@@ -16,7 +16,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
     <!-- <link rel="icon" href="../../../../favicon.ico"> -->
@@ -41,11 +41,8 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <!-- <script src="{{url_for('static',filename='bootstrap/js/jquery-3.3.1.slim.min.js')}}"></script> -->
     <script src="{{url_for('static',filename='bootstrap/js/jquery.min.js')}}"></script>
-    <!-- <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery-slim.min.js"><\/script>')</script> -->
-    <script src="{{url_for('static',filename='bootstrap/js/popper.min.js')}}"></script>
-    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 
     <!-- sweet alert  -->
     <script src="{{url_for('static',filename='Usefulljs/sweetalert.min.js')}}"></script>
@@ -57,21 +54,6 @@
     {#{ moment.lang(lang_) }#}
     <!-- end js moment -->
 
-    <!-- Custom styles for this template -->
-    <style>
-          /* Move down content because we have a fixed navbar that is 3.5rem tall */
-      body {
-        padding-top: 3.5rem;
-      }
-
-
-
-
-
-
-
-
-    </style>
     {% block head %}
     {% endblock %}
 
@@ -79,82 +61,54 @@
 
   <body>
 
-    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
-      <!-- <a class="navbar-brand" href="#">Navbar</a> -->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+      <div class="container">
+        <a class="navbar-brand" href="{{url_for('profile')}}">Butler</a>
 
-      <div class="btn-group" role="group">
-         <button id="btnGroupDrop1" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-           Setting
-         </button>
-         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-          <a class="dropdown-item" href="{{url_for('ChangePassword')}}" >change <i class="fas fa-key"></i></a>
-          <!-- <a class="dropdown-item" href="{{url_for('exportData')}}" >export (careful!)</a> -->
-          <button type="button" class="dropdown-item" data-toggle="modal" data-target="#exportData">export</button>
-          <button type="button" class="dropdown-item" data-toggle="modal" data-target="#importData">import</button>
-          <div class="dropdown-item">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
 
-          </div>
+        <div class="collapse navbar-collapse" id="navbarsExampleDefault">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a id='nabbar_button_password' class="nav-link" href="{{url_for('Password')}}">Password</a>
+            </li>
+            <li class="nav-item">
+              <a id='nabbar_button_relation' class="nav-link" href="{{url_for('Relation_list')}}">Relation</a>
+            </li>
+            <li class="nav-item">
+              <a id='nabbar_button_diary' class="nav-link" href="{{url_for('Diary',pageindex=1)}}">Diary</a>
+            </li>
+            <li class="nav-item">
+            {% block UpLeftPagination %}
+            {% endblock %}
+            </li>
+          </ul>
 
+          <div class="d-flex flex-wrap gap-2 align-items-center justify-content-end">
+            {% block UpRightPagination %}
+            {% endblock %}
 
-
-
-         </div>
-       </div>
-
-
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
-          <!-- <li class="nav-item active"> -->
-          <li class="nav-item">
-            <a id='nabbar_button_password' class="nav-link" href="{{url_for('Password')}}">Password</a>
-          </li>
-          <li class="nav-item">
-            <a id='nabbar_button_relation' class="nav-link" href="{{url_for('Relation_list')}}">Relation</a>
-          </li>
-          <li class="nav-item">
-            <a id='nabbar_button_diary' class="nav-link" href="{{url_for('Diary',pageindex=1)}}">Diary</a>
-          </li>
-
-
-          <li class="nav-item">
-          {% block UpLeftPagination %}
-          {% endblock %}
-          </li>
-
-
-          <!-- <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="http://example.com" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-            <div class="dropdown-menu" aria-labelledby="dropdown01">
-              <a class="dropdown-item" href="#">Action</a>
-              <a class="dropdown-item" href="#">Another action</a>
-              <a class="dropdown-item" href="#">Something else here</a>
+            <div class="btn-toolbar gap-2" role="toolbar" aria-label="Toolbar with button groups">
+              <div class="btn-group" role="group" aria-label="Settings">
+                <button id="btnGroupDrop1" type="button" class="btn btn-outline-light dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                  Setting
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="btnGroupDrop1">
+                  <li><a class="dropdown-item" href="{{url_for('ChangePassword')}}">change <i class="fas fa-key"></i></a></li>
+                  <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exportData">export</button></li>
+                  <li><button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="#importData">import</button></li>
+                </ul>
+              </div>
+              <div class="btn-group" role="group" aria-label="Page actions">
+              {% block UpRightButton %}
+              {% endblock %}
+                <a class="btn btn-danger" href="{{url_for('shutdownserver')}}" role="button"><i class="fas fa-power-off"></i></a>
+              </div>
             </div>
-          </li> -->
-
-
-        </ul>
-
-        <!-- <form class="form-inline my-2 my-lg-0">
-          <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-          <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form> -->
-        {% block UpRightPagination %}
-        {% endblock %}
-
-        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-          <div class="btn-group" role="group" >
-          {% block UpRightButton %}
-          {% endblock %}
-            <a class="btn btn-danger btn-lg" href="{{url_for('shutdownserver')}}" role="button"><i class="fas fa-power-off"></i></a>
           </div>
         </div>
-
-
-
       </div>
     </nav>
 
@@ -168,7 +122,7 @@
 
     <div class="modal-footer">
       <a class="btn btn-warning" href="{{url_for('exportData')}}" > export </a>
-      <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
     </div>
     {% endcall %}
 
@@ -178,9 +132,9 @@
   <div class="alert alert-danger" role="alert">
     This covers original data. An imported file with the error type will destroy everything!
   </div>
-    <form action = "{{url_for('importData')}}" method = "POST" enctype = "multipart/form-data">
-       <input type = "file" name = "file" />
-       <input type = "submit"/>
+    <form action="{{url_for('importData')}}" method="POST" enctype="multipart/form-data" class="d-flex gap-2">
+       <input type="file" name="file" class="form-control" />
+       <button type="submit" class="btn btn-primary">import</button>
     </form>
   {% endcall %}
 
@@ -220,13 +174,13 @@
     {% with messages = get_flashed_messages() %}
     <div class="container">
       {% if messages %}
-        <ul>
+        <div class="list-unstyled">
           {% for message in messages %}
             <div class="alert alert-danger" role="alert">
-              <li>{{ message }}</li>
+              {{ message }}
             </div>
           {% endfor %}
-        </ul>
+        </div>
       {% endif %}
     </div>
     {% endwith %}
@@ -244,12 +198,9 @@
 
 
 
-    <hr>
-    <footer class="footer">
+    <footer class="footer mt-4 py-3 bg-light">
       {% block footer %}
-      <div class="container text-center" style="height:50px;background:white">
-       <small sytle="color:white"> X </small>
-      </div>
+      <div class="container text-center text-muted small">Butler</div>
       {% endblock %}
     </footer>
 
@@ -285,7 +236,17 @@
 
    function ScrollIntoView(id){
      // document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'nearest'});
-     document.getElementById(id).scrollIntoView(false);
+     var el = document.getElementById(id);
+     if (el) {
+       el.scrollIntoView(false);
+     }
+   }
+
+   function ShowBootstrapModal(id) {
+     var el = document.getElementById(id);
+     if (el) {
+       bootstrap.Modal.getOrCreateInstance(el).show();
+     }
    }
 
 

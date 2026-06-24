@@ -1,6 +1,6 @@
-Flask==3.1.0
-Flask-WTF==1.2.2
+Flask==3.1.3
+Flask-WTF==1.3.0
+cryptography==43.0.0
 pypinyin==0.54.0
-WTForms==3.2.1
-rudeencrypt==2021.5.15.1110
+WTForms==3.2.2
 zhdate==0.1
